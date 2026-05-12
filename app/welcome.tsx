@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -6,42 +5,16 @@ import {
   TouchableOpacity,
   StatusBar,
 } from "react-native";
-
+import { useRouter } from 'expo-router';
 
 export default function WelcomeScreen() {
   const elixPotionPath = require('@/assets/images/elix-potion.png')
   const elixLogoPath = require('@/assets/images/elix-logo.png')
+  const router = useRouter()
 
   return (
     <View className="flex-1 bg-[#16111b] items-center justify-center px-6 overflow-hidden">
       <StatusBar barStyle="light-content" />
-
-      {/* Atmospheric Purple Glow */}
-      <View className="absolute inset-0 items-center justify-center">
-        <LinearGradient
-         colors={['transparent', 'rgba(138, 43, 226, 0.15)', 'transparent']}
-         style={[StyleSheet.absoluteFill, { transform: [{ scale: 1.5 }] }]}
-         start={{ x: 0.5, y: 0.3 }}
-         end={{ x: 0.5, y: 0.7 }}
-           />   {/* Glow Suave Superior para destacar o logo */}
-           <View
-         style={{
-           position: 'absolute',
-           top: -150,
-           left: '50%',
-           marginLeft: -250,
-           width: 500,
-           height: 500,
-           backgroundColor: 'rgba(138, 43, 226, 0.1)',
-           borderRadius: 250,
-           filter: 'blur(80px)', // Nota: Requer suporte a Blur no RN ou uso de MaskedView/Canvas
-         }}
-           />   {/* Degradê de profundidade de baixo para cima */}
-           <LinearGradient
-         colors={['rgba(13, 9, 18, 0)', '#0d0912']}
-         className="absolute bottom-0 left-0 right-0 h-1/2"
-           />
-      </View>
 
       {/* Main Content */}
       <View className="w-full max-w-md items-center space-y-8">
@@ -57,7 +30,6 @@ export default function WelcomeScreen() {
         {/* Main Image */}
         <View className="relative w-[307px] h-[307px] items-center justify-center">
           {/* Glow */}
-
           <Image
             source={elixPotionPath}
             resizeMode="contain"
@@ -81,6 +53,7 @@ export default function WelcomeScreen() {
         <View className="w-full mt-10 space-y-4">
           <TouchableOpacity
             activeOpacity={0.8}
+            onPress={()=>router.push('/signUp')}
             className="w-full bg-[#8a2be2] py-4 rounded-full items-center"
             style={{
               shadowColor: "#8a2be2",
@@ -101,6 +74,7 @@ export default function WelcomeScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             className="w-full py-3 items-center"
+            onPress={()=>router.replace('/(tabs)')}
           >
             <Text className="text-[#dcb8ff] text-base font-medium">
               Já tenho uma conta

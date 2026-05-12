@@ -1,13 +1,5 @@
-import { Link } from "expo-router";
-import { View } from "react-native";
-import "../global.css";
+import { Redirect } from 'expo-router';
 
 export default function Index() {
-  return (
-    <View className="">
-      <Link href="/welcome">
-        Go to Welcome screen
-      </Link>
-    </View>
-  );
+  return <Redirect href="/welcome" />;
 }
