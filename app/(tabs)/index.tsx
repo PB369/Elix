@@ -1,16 +1,16 @@
-import "../../global.css";
-import React, { useRef, useEffect } from "react";
-import {
-  View,
-  ScrollView,
-  Animated,
-  StatusBar,
-} from "react-native";
-import DoseCard from "@/components/HomeScreenComponents/DoseCard";
 import ContentCards from "@/components/HomeScreenComponents/ContentCards";
+import DoseCard from "@/components/HomeScreenComponents/DoseCard";
+import LiquidFillCard from "@/components/HomeScreenComponents/LiquidFillCard";
 import Header from "@/components/HomeScreenComponents/Header";
-import YourContents from "@/components/HomeScreenComponents/YourContents";
 import UploadButton from "@/components/HomeScreenComponents/UploadButton";
+import YourContents from "@/components/HomeScreenComponents/YourContents";
+import React, { useEffect, useRef } from "react";
+import {
+  Animated,
+  View
+} from "react-native";
+import "../../global.css";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function HomeScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -36,12 +36,24 @@ export default function HomeScreen() {
         <Animated.View
           style={{ flex: 1, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
         >
+        
           <Header/>
           <DoseCard onPress={() => {}} />
+
+            {/* TESTANDO  - Incluir no componente dos conteudos*/}
+          {/* <LiquidFillCard progress={60}   icon={
+                <MaterialCommunityIcons
+                name="brain"
+                size={30}
+                color="#a78bfa"
+                />
+            }title="Ola" status="Consolidado"/> */}
           <YourContents/>
           <ContentCards/>
+       
         </Animated.View>
         <UploadButton/>
+           
     </View>
   );
 }

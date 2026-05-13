@@ -33,7 +33,7 @@ const COURSES: Option[] = [
   { label: 'Design Estratégico', value: 'design' },
 ]
 
-const SEMESTERS: Option[] = Array.from({ length: 8 }, (_, i) => ({
+const SEMESTERS: Option[] = Array.from({ length: 12 }, (_, i) => ({
   label: `${i + 1}º Semestre`,
   value: String(i + 1),
 }))

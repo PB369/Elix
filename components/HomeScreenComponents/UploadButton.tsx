@@ -8,10 +8,10 @@ const UploadButton = ()=>{
           style={{
             position: "absolute",
             right: 24,
-            bottom: 108,
+            bottom: 112,
             width: 52,
             height: 52,
-            borderRadius: 26,
+            borderRadius: 12,
             borderWidth: 2,
             borderColor: "#8749f1",
             backgroundColor: "#5b21b6",

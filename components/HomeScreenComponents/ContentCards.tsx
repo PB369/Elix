@@ -1,10 +1,12 @@
-import { ScrollView, View } from "react-native"
-import ContentCard from "./ContentCard"
 import { MaterialCommunityIcons } from "@expo/vector-icons"
+import { ScrollView } from "react-native"
+import ContentCard from "./ContentCard"
+
 
 const ContentCards = ()=>{
     return (
         <ScrollView className="flex-row px-6 gap-3 h-full w-full">
+
             <ContentCard
             icon={
                 <MaterialCommunityIcons
@@ -17,8 +19,8 @@ const ContentCards = ()=>{
             category="Neuro"
             status="Em reforço"
             progress={60}
-            />
-            <ContentCard
+            /> 
+             <ContentCard
             icon={
                 <MaterialCommunityIcons
                 name="sitemap"
@@ -30,7 +32,7 @@ const ContentCards = ()=>{
             category="Sistemas"
             status="Dominado"
             progress={85}
-            />
+            /> 
         </ScrollView>
     )
 }
