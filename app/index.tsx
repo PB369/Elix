@@ -1,5 +1,7 @@
 import { Redirect } from 'expo-router';
+import { useState } from 'react';
 
 export default function Index() {
-  return <Redirect href="/welcome" />;
+  const [isFirstAccess, setIsFirstAccess] = useState(true);
+  if (isFirstAccess) {return <Redirect href="/welcome" />}
 }
