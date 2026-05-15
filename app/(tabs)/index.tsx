@@ -3,9 +3,10 @@ import DoseCard from "@/components/HomeScreenComponents/DoseCard";
 import Header from "@/components/HomeScreenComponents/Header";
 import UploadButton from "@/components/HomeScreenComponents/UploadButton";
 import YourContents from "@/components/HomeScreenComponents/YourContents";
+import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { Animated, Text, View } from "react-native";
+import { Animated, Text, TouchableOpacity, View } from "react-native";
 import "../../global.css";
 
 
@@ -18,7 +19,7 @@ export default function HomeScreen() {
   // 1. Ref para controlar o Bottom Sheet
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
   // 2. Define as alturas que o Bottom Sheet pode assumir (ex: 25% e 50% da tela)
-  const snapPoints = useMemo(() => ['15%'], []);
+  const snapPoints = useMemo(() => ['20%'], []);
   // 3. Função disparada pelo seu Upload Button
   const handlePresentModalPress = () => {
     bottomSheetModalRef.current?.present();
@@ -79,8 +80,26 @@ export default function HomeScreen() {
         backgroundStyle={{ backgroundColor: 'black' }}
       >
         <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
-          <Text style={{color:"white"}}>Adicionar Conteúdo</Text>
-          {/* Ex: Botões de Câmera, Galeria, Arquivos */}
+          
+              <TouchableOpacity className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
+                
+                {/* Ícone posicionado à esquerda com fundo leve */}
+                <View className="mr-4 p-2.5 rounded-full">
+                  <AntDesign name="plus" size={24} color="#d3a0fc" />
+                </View>
+
+                {/* Bloco de texto empilhado (Título em cima, Subtítulo em baixo) */}
+                <View className="flex-1">
+                  <Text className="text-lg font-semibold text-white mb-1">
+                    Adicionar Conteúdo
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    Inclua Documentos, anotações de aula, o que estudou
+                  </Text>
+                </View>
+
+              </TouchableOpacity>
+              
         </BottomSheetView>
       </BottomSheetModal>
            
