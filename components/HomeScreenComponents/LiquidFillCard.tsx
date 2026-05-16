@@ -1,75 +1,127 @@
 import { BlurView } from "expo-blur";
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-import { Animated, Easing, StyleSheet, Text, View, ViewStyle } from "react-native";
+import {
+  Animated,
+  AppState,
+  AppStateStatus,
+  Easing,
+  StyleSheet,
+  Text,
+  View,
+  ViewStyle,
+} from "react-native";
 import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
+/**
+ * LiquidFillCard — React Native
+ *
+ * Dependências:
+ *   npx expo install react-native-svg
+ *   npx expo install expo-blur
+ *
+ * Props:
+ *  - title     {string}    — nome do curso
+ *  - icon      {ReactNode} — ícone da matéria
+ *  - status    {string}    — texto da tag
+ *  - progress  {number}    — nível 0–100
+ *  - height    {number}    — altura em dp (default 220)
+ *  - style     {ViewStyle} — estilo externo
+ */
+
 interface LiquidFillCardProps {
-  title?: string;
-  icon?: ReactNode;
-  status?: string;
+  title?:    string;
+  icon?:     ReactNode;
+  status?:   string;
   progress?: number;
-  height?: number;
-  style?: ViewStyle;
+  height?:   number;
+  style?:    ViewStyle;
 }
 
-// ── helper da onda simplificado (alta performance) ──
+// ── constantes de velocidade baseadas em tempo real (ms) ──
+// 0.025 / 16ms = 0.0015625 → mesma velocidade do original a 60fps
+const WAVE_SPEED   = 0.0015625; // radianos por ms — equivale a += 0.025 por frame a 60fps
+const FILL_SPEED   = 0.003125;  // fração por ms  — equivale a *= 0.05 por frame a 60fps
+const PCT_THROTTLE = 100;       // atualiza o número a cada 100ms (10fps) — leve
+
 function buildWavePath(W: number, H: number, fill: number, t: number): string {
-  const SEG = 24;
+  const SEG      = 24;
   const surfaceY = H - (fill / 100) * H;
-  const amp = 6; // Altura fixa da onda (não "pula" mais)
+  const amp      = 6;
 
-  // Início da linha no canto esquerdo
-  let d = `M0,${surfaceY + amp * Math.sin(t)}`;
-
+  let d = `M0,${(surfaceY + amp * Math.sin(t)).toFixed(1)}`;
   for (let i = 0; i <= SEG; i++) {
     const x = (i / SEG) * W;
-    // Math.PI * 4 cria o formato de duas ondas no card.
-    // O '+ t' faz a onda rolar suavemente para a esquerda.
-   const y = surfaceY + amp * Math.sin((i / SEG) * Math.PI * 2 + t);
-    
-    // toFixed(1) encurta a string enviada pela Bridge, otimizando ainda mais a performance
+    const y = surfaceY + amp * Math.sin((i / SEG) * Math.PI * 2 + t);
     d += `L${x.toFixed(1)},${y.toFixed(1)}`;
   }
-  
-  // Fecha o polígono até o fundo
   d += `L${W},${H}L0,${H}Z`;
   return d;
 }
 
-// ── componente interno: SVG atualizado via ref (não crasha o app) ──
-const WaveSvg: FC<{ W: number; H: number; progressRef: React.MutableRefObject<number> }> = ({ W, H, progressRef }) => {
-  const pathRef = useRef<any>(null);
-  const fillRef = useRef(0);
-  const tRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
+// ── WaveSvg: animação isolada, sem re-render do pai ──
+const WaveSvg: FC<{
+  W: number;
+  H: number;
+  progressRef: React.MutableRefObject<number>;
+}> = ({ W, H, progressRef }) => {
+  const pathRef   = useRef<any>(null);
+  const fillRef   = useRef(0);
+  const tRef      = useRef(0);
+  const rafRef    = useRef<number | null>(null);
+  const lastMsRef = useRef<number | null>(null); // FIX 2: timestamp do frame anterior
+  const activeRef = useRef(true);                // FIX 1: pausa quando app em background
 
   useEffect(() => {
-    function loop() {
-      fillRef.current += (progressRef.current - fillRef.current) * 0.05;
-      tRef.current += 0.025; // Bem mais lento e relaxante
+    // FIX 1: escuta mudanças de estado do app
+    const onAppStateChange = (state: AppStateStatus) => {
+      if (state === "active") {
+        activeRef.current = true;
+        lastMsRef.current = null; // reseta o delta para evitar salto
+      } else {
+        activeRef.current = false;
+      }
+    };
 
-      if (pathRef.current) {
-        pathRef.current.setNativeProps({
-          d: buildWavePath(W, H, fillRef.current, tRef.current),
-        });
+    const sub = AppState.addEventListener("change", onAppStateChange);
+
+    function loop(timestamp: number) {
+      // FIX 2: calcula delta de tempo real em ms
+      const delta = lastMsRef.current !== null
+        ? Math.min(timestamp - lastMsRef.current, 64) // cap em 64ms (evita saltos grandes)
+        : 16;
+      lastMsRef.current = timestamp;
+
+      // só avança a física se o app estiver em foreground
+      if (activeRef.current) {
+        // FIX 2: velocidade baseada em delta — igual em 60fps, 90fps e 120fps
+        tRef.current    += WAVE_SPEED * delta;
+        fillRef.current += (progressRef.current - fillRef.current) * FILL_SPEED * delta;
+
+        if (pathRef.current) {
+          pathRef.current.setNativeProps({
+            d: buildWavePath(W, H, fillRef.current, tRef.current),
+          });
+        }
       }
 
       rafRef.current = requestAnimationFrame(loop);
     }
 
     rafRef.current = requestAnimationFrame(loop);
+
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+      sub.remove();
     };
-  }, [W, H]);
+  }, [W, H]); // W e H no array — o loop recria se o layout mudar
 
   return (
     <Svg width={W} height={H} style={StyleSheet.absoluteFill}>
       <Defs>
         <LinearGradient id="lg" x1="0" y1="1" x2="0" y2="0">
-          <Stop offset="0" stopColor="#c494ff" stopOpacity="1" />
+          <Stop offset="0"   stopColor="#c494ff" stopOpacity="1" />
           <Stop offset="0.5" stopColor="#8b5cf6" stopOpacity="1" />
-          <Stop offset="1" stopColor="#5b21b6" stopOpacity="1" />
+          <Stop offset="1"   stopColor="#5b21b6" stopOpacity="1" />
         </LinearGradient>
       </Defs>
       <Path ref={pathRef} fill="url(#lg)" />
@@ -77,13 +129,13 @@ const WaveSvg: FC<{ W: number; H: number; progressRef: React.MutableRefObject<nu
   );
 };
 
-// ── componente principal com UI completa ──
+// ── componente principal ──
 const LiquidFillCard: FC<LiquidFillCardProps> = ({
-  title = "Neurologia",
+  title    = "Neurologia",
   icon,
-  status = "Consolidado",
+  status   = "Consolidado",
   progress = 0,
-  height = 220,
+  height   = 220,
   style,
 }) => {
   const [cardWidth, setCardWidth] = useState<number>(0);
@@ -93,21 +145,28 @@ const LiquidFillCard: FC<LiquidFillCardProps> = ({
     progressRef.current = Math.min(100, Math.max(0, progress));
   }, [progress]);
 
-  const animPct = useRef(new Animated.Value(0)).current;
-  const [displayPct, setDisplayPct] = useState(0);
+  // FIX 3: porcentagem throttled — setState apenas 10x/s em vez de 60x/s
+  const [displayPct, setDisplayPct]   = useState(0);
+  const animPct                        = useRef(new Animated.Value(0)).current;
+  const lastPctUpdateRef               = useRef(0);
 
   useEffect(() => {
     Animated.timing(animPct, {
-      toValue: progress,
-      duration: 1200,
-      easing: Easing.out(Easing.cubic),
+      toValue:         progress,
+      duration:        1200,
+      easing:          Easing.out(Easing.cubic),
       useNativeDriver: false,
     }).start();
   }, [progress]);
 
   useEffect(() => {
     const id = animPct.addListener(({ value }) => {
-      setDisplayPct(Math.round(value));
+      const now = Date.now();
+      // FIX 3: só chama setState se passaram ao menos PCT_THROTTLE ms
+      if (now - lastPctUpdateRef.current >= PCT_THROTTLE) {
+        lastPctUpdateRef.current = now;
+        setDisplayPct(Math.round(value));
+      }
     });
     return () => animPct.removeListener(id);
   }, []);
@@ -197,24 +256,16 @@ const styles = StyleSheet.create({
     gap: 10,
     zIndex: 10,
   },
-iconBox: {
+  iconBox: {
     width: 64,
     height: 64,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    
-    // Corpo do vidro
-    backgroundColor: "rgba(255, 255, 255, 0.08)", 
-    
-    // Reflexo da luz nas bordas
+    backgroundColor: "rgba(255,255,255,0.08)",
     borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.3)", 
-    
-    // Necessário para o Blur não vazar
-    overflow: "hidden", 
-    
-    // (Opcional) Sombra sutil para descolar o vidro do fundo
+    borderColor: "rgba(255,255,255,0.3)",
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.15,
