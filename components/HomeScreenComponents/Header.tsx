@@ -1,6 +1,6 @@
-import { Image, Text, View } from "react-native"
+import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons"
+import { Image, View } from "react-native"
 import StatBadge from "./StatBadge"
-import { Feather, FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons"
 
 const Header = ()=>{
     return (
@@ -18,7 +18,7 @@ const Header = ()=>{
             <View className="flex-row items-center">
                 <StatBadge
                     icon={
-                    <FontAwesome6 name="glass-water" size={12} color="#a78bfa" />
+                    <FontAwesome6 name="droplet" size={12} color="#a78bfa" />
                     }
                     value="250"
                 />
