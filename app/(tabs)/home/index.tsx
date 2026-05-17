@@ -7,7 +7,8 @@ import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
-import "../../global.css";
+import '../../../global.css';
+import { router } from "expo-router";
 
 
 
@@ -80,8 +81,8 @@ export default function HomeScreen() {
         backgroundStyle={{ backgroundColor: 'black' }}
       >
         <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
-          
-              <TouchableOpacity className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
+            
+              <TouchableOpacity onPress={()=> router.push('/home/Screen1')} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
                 
                 {/* Ícone posicionado à esquerda com fundo leve */}
                 <View className="mr-4 p-2.5 rounded-full">
@@ -99,7 +100,7 @@ export default function HomeScreen() {
                 </View>
 
               </TouchableOpacity>
-              
+      
         </BottomSheetView>
       </BottomSheetModal>
            

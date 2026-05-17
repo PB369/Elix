@@ -26,23 +26,23 @@ const ContentCards = () => {
       
       <LiquidFillCard
         status="Em reforço"
-        title="Neurologia"
+        title="Sistema Digestivo"
         progress={20}
-        icon={'😁'}
+        icon={'👩‍⚕️'}
         style={{ width:  190 }} // 2. Trava a largura do card
       />
             <LiquidFillCard
         status="Consolidado"
-        title="Neurologia"
-        progress={80}
-        icon={'😁'}
+        title="Cardio"
+        progress={70}
+        icon={'❤️'}
         style={{ width:  190 }} // 2. Trava a largura do card
       />
       
       <LiquidFillCard
         status="Em reforço"
         title="Neurologia"
-        progress={95}
+        progress={65}
         icon={'😁'}
         style={{ width:  190 }} // 2. Trava a largura do card
       />

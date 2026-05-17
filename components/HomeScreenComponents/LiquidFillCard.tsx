@@ -135,7 +135,7 @@ const LiquidFillCard: FC<LiquidFillCardProps> = ({
   icon,
   status   = "Consolidado",
   progress = 0,
-  height   = 220,
+  height   = 200,
   style,
 }) => {
   const [cardWidth, setCardWidth] = useState<number>(0);

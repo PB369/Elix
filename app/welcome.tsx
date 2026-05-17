@@ -1,11 +1,11 @@
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StatusBar,
-} from "react-native";
 import { useRouter } from 'expo-router';
+import {
+  Image,
+  StatusBar,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function WelcomeScreen() {
   const elixPotionPath = require('@/assets/images/elix-potion.png')
@@ -74,7 +74,7 @@ export default function WelcomeScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             className="w-full py-3 items-center"
-            onPress={()=>router.replace('/(tabs)')}
+            onPress={()=>router.replace('/(tabs)/home')}
           >
             <Text className="text-[#dcb8ff] text-base font-medium">
               Já tenho uma conta
