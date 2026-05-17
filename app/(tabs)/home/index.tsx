@@ -5,10 +5,10 @@ import UploadButton from "@/components/HomeScreenComponents/UploadButton";
 import YourContents from "@/components/HomeScreenComponents/YourContents";
 import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { router } from "expo-router";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import '../../../global.css';
-import { router } from "expo-router";
 
 
 
@@ -55,6 +55,8 @@ export default function HomeScreen() {
   }, []);
 
   return (
+
+   
     <View className="flex-1 bg-[#080510]">
         <Animated.View
           style={{ flex: 1, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
@@ -82,7 +84,7 @@ export default function HomeScreen() {
       >
         <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
             
-              <TouchableOpacity onPress={()=> router.push('/home/Screen1')} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
+              <TouchableOpacity onPress={()=>{ bottomSheetModalRef.current?.dismiss();router.push('/home/Screen1')}} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
                 
                 {/* Ícone posicionado à esquerda com fundo leve */}
                 <View className="mr-4 p-2.5 rounded-full">

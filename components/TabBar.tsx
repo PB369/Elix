@@ -74,6 +74,7 @@ function ElixTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         right: 0,
         paddingHorizontal: 16,
         paddingBottom: 28,
+  
       }}
     >
       {/* Pill container */}
