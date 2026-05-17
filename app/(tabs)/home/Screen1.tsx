@@ -4,17 +4,15 @@ import React, { useRef, useState } from 'react';
 import {
     Animated,
     Dimensions,
-    KeyboardAvoidingView,
     Platform,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    View,
+    View
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // ─── Design Tokens ────────────────────────────────────────────────────────────
@@ -41,7 +39,8 @@ export default function Screen1() {
   const pressAnim = useRef(new Animated.Value(1)).current;
 
   const maxChars = 1000;
-
+  
+  const [activeTab, setActiveTab] = useState<'descricao' | 'arquivos'>('descricao');
   function handleUploadPress() {
     Animated.sequence([
       Animated.timing(pressAnim, { toValue: 0.97, duration: 80, useNativeDriver: true }),
@@ -51,11 +50,7 @@ export default function Screen1() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-      >
+     
         {/* ── Header ── */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -69,13 +64,41 @@ export default function Screen1() {
           <View style={{ width: 40 }} />
         </View>
 
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps="handled"
-        >
-          {/* ── Seção: Descrição ── */}
+
+        {/* Tab Selector */}
+<View style={styles.tabContainer}>
+  <TouchableOpacity
+    style={[styles.tab, activeTab === 'descricao' && styles.tabActive]}
+    onPress={() => setActiveTab('descricao')}
+    activeOpacity={0.7}
+  >
+    <Text style={[styles.tabText, activeTab === 'descricao' && styles.tabTextActive]}>
+      Descrição
+    </Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    style={[styles.tab, activeTab === 'arquivos' && styles.tabActive]}
+    onPress={() => setActiveTab('arquivos')}
+    activeOpacity={0.7}
+  >
+    <Text style={[styles.tabText, activeTab === 'arquivos' && styles.tabTextActive]}>
+      Arquivos
+    </Text>
+  </TouchableOpacity>
+</View>
+
+       <KeyboardAwareScrollView
+  style={{ flex: 1 }}
+  contentContainerStyle={styles.scrollContent}
+  showsVerticalScrollIndicator={false}
+  keyboardShouldPersistTaps="handled"
+  enableOnAndroid={true}
+  extraScrollHeight={20}
+>   
+
+
+            {activeTab === 'descricao' && (
+         
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <View style={styles.iconBox}>
@@ -118,7 +141,11 @@ export default function Screen1() {
             </View>
           </View>
 
-          {/* ── Seção: Materiais ── */}
+          )}
+
+
+          {activeTab === 'arquivos' && (
+      
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <View style={styles.iconBox}>
@@ -150,10 +177,11 @@ export default function Screen1() {
               </TouchableOpacity>
             </Animated.View>
           </View>
+          )}
 
           {/* Espaço para o botão fixo não cobrir conteúdo */}
         
-        </ScrollView>
+        </KeyboardAwareScrollView>
 
         {/* ── Botão Gerar fixo ── */}
         <View style={styles.footer}>
@@ -166,7 +194,6 @@ export default function Screen1() {
             <Ionicons name="sparkles" size={20} color={C.onPrimaryContainer} />
           </TouchableOpacity>
         </View>
-      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -186,6 +213,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 16,
   },
+  tabContainer: {
+  flexDirection: 'row',
+  backgroundColor: C.surfaceContainerHigh,
+  marginHorizontal: 20,
+  marginBottom: 20,
+  borderRadius: 12,
+  padding: 4,
+},
+tab: {
+  flex: 1,
+  paddingVertical: 10,
+  alignItems: 'center',
+  borderRadius: 10,
+},
+tabActive: {
+  backgroundColor: C.surfaceContainerHighest,
+},
+tabText: {
+  fontFamily: 'Manrope_500Medium',
+  fontSize: 14,
+  color: C.onSurfaceVariant,
+},
+tabTextActive: {
+  fontFamily: 'Manrope_600SemiBold',
+  color: C.onSurface,
+},
   backButton: {
     width: 40,
     height: 40,
@@ -248,7 +301,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: C.outlineVariant,
     padding: 16,
-    minHeight: 200,
+    minHeight: 30,
   },
   textAreaWrapperFocused: {
     borderColor: C.primaryContainer,
@@ -262,7 +315,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Manrope_400Regular',
     fontSize: 15,
     color: C.onSurface,
-    minHeight: 160,
+    minHeight: 30,
     lineHeight: 24,
   },
   charCount: {
