@@ -2,14 +2,14 @@ import { Feather, Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import React, { useRef, useState } from 'react';
 import {
-    Animated,
-    Dimensions,
-    Platform,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View
+  Animated,
+  Dimensions,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -33,7 +33,7 @@ const C = {
   onSecondaryContainer:   '#d2a6ff',
 };
 
-export default function Screen1() {
+export default function AddContent() {
   const [description, setDescription] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const pressAnim = useRef(new Animated.Value(1)).current;
@@ -47,6 +47,19 @@ export default function Screen1() {
       Animated.timing(pressAnim, { toValue: 1, duration: 80, useNativeDriver: true }),
     ]).start();
   }
+
+
+async function handleGenerate() {
+  // chama sua API aqui
+  // const questions = await generateQuestions(description);
+  
+//   router.push({
+//     pathname: '/home/QuizScreen',
+//     params: { questions: JSON.stringify(questions) }
+//   });
+// }
+console.log("Chama a api")
+}
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
@@ -188,7 +201,7 @@ export default function Screen1() {
           <TouchableOpacity
             style={styles.generateButton}
             activeOpacity={0.85}
-            onPress={() => {}}
+            onPress={handleGenerate}
           >
             <Text style={styles.generateButtonText}>Gerar</Text>
             <Ionicons name="sparkles" size={20} color={C.onPrimaryContainer} />
