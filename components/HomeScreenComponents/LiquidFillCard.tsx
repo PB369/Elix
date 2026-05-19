@@ -198,10 +198,10 @@ const LiquidFillCard: FC<LiquidFillCardProps> = ({
         <Text style={styles.title}>{title}</Text>
       </View>
 
-      <View style={styles.pctBadge} pointerEvents="none">
+      {/* <View style={styles.pctBadge} pointerEvents="none">
         <Text style={styles.pctNumber}>{displayPct}</Text>
         <Text style={styles.pctSign}>%</Text>
-      </View>
+      </View> */}
     </View>
   );
 };
