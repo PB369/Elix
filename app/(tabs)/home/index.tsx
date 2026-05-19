@@ -63,7 +63,7 @@ export default function HomeScreen() {
         >
         
           <Header/>
-          <DoseCard onPress={() => {}} />
+          <DoseCard onPress={() => {router.push("/(tabs)/home/Quiz")}} />
           <YourContents/>
           <ContentCards/>
       
@@ -84,7 +84,7 @@ export default function HomeScreen() {
       >
         <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
             
-              <TouchableOpacity onPress={()=>{ bottomSheetModalRef.current?.dismiss();router.push('/home/Screen1')}} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
+              <TouchableOpacity onPress={()=>{ bottomSheetModalRef.current?.dismiss();router.push('/home/AddContent')}} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
                 
                 {/* Ícone posicionado à esquerda com fundo leve */}
                 <View className="mr-4 p-2.5 rounded-full">

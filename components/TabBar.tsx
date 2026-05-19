@@ -59,7 +59,7 @@ function ElixTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const pathname = usePathname();
 
   // Lista de rotas onde o tab bar deve sumir
-  const hiddenRoutes = ['/home/Screen1'];
+  const hiddenRoutes = ['/home/AddContent','/home/Quiz'];
 
   if (hiddenRoutes.some(route => pathname.includes(route))) {
     return null;
