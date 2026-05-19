@@ -10,7 +10,7 @@ const Header = ()=>{
                 <Image 
                     source={require('@/assets/images/elix-logo.png')} 
                     resizeMode="contain"
-                    className="w-24 h-12"
+                    className="className=w-28 h-14"
                 />
             </View>
 
