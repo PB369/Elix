@@ -1,75 +1,98 @@
 import { Entypo, Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef } from "react";
-import { Animated, Text, TouchableOpacity, View } from "react-native";
+import { Animated, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 
 const DoseCard = ({ onPress }: { onPress: () => void }) => {
   const shimmer = useRef(new Animated.Value(0)).current;
+  const { width } = useWindowDimensions();
+
+  const titleSize = width * 0.065;
+  const subtitleSize = width * 0.035;
+  const iconBoxSize = width * 0.13;
+  const phoneWidth = width * 0.13;
+  const phoneHeight = width * 0.2;
+  const illustrationSize = width * 0.28;
+  const cardPadding = width * 0.055;
 
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
-        Animated.timing(shimmer, {
-          toValue: 1,
-          duration: 2200,
-          useNativeDriver: true,
-        }),
-        Animated.timing(shimmer, {
-          toValue: 0,
-          duration: 2200,
-          useNativeDriver: true,
-        }),
+        Animated.timing(shimmer, { toValue: 1, duration: 2200, useNativeDriver: true }),
+        Animated.timing(shimmer, { toValue: 0, duration: 2200, useNativeDriver: true }),
       ])
     ).start();
   }, [shimmer]);
 
   const glowOpacity = shimmer.interpolate({
     inputRange: [0, 1],
-    outputRange: [0.4, 0.85],
+    outputRange: [0.4, 0.9],
   });
 
   return (
     <View
-      className="mx-6 rounded-3xl overflow-hidden"
-      style={{ borderWidth: 1, borderColor: "rgba(139,92,246,0.35)" }}
+      className="rounded-3xl overflow-hidden"
+      style={{
+        marginHorizontal: width * 0.03,
+        borderWidth: 1,
+        borderColor: "rgba(139,92,246,0.35)",
+      }}
     >
       <LinearGradient
         colors={["#1a0a2e", "#170d35", "#0f0a1e"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        className="p-5 pt-4"
+        style={{ padding: cardPadding }}
       >
         {/* Top row */}
-        <View className="flex-row items-start justify-between mb-4">
-          <View className="flex-1 pr-4">
+        <View className="flex-row items-start justify-between" style={{ marginBottom: 16 }}>
+
+          <View className="flex-1" style={{ paddingRight: 12 }}>
             {/* Icon badge */}
             <View
-              className="w-12 h-12 rounded-xl items-center justify-center mb-3"
-              style={{ backgroundColor: "#0B031B", borderWidth:1, borderColor: "#48356b" }}
+              className="items-center justify-center"
+              style={{
+                width: iconBoxSize,
+                height: iconBoxSize,
+                borderRadius: iconBoxSize * 0.28,
+                marginBottom: 12,
+                backgroundColor: "#0B031B",
+                borderWidth: 1,
+                borderColor: "#48356b",
+              }}
             >
-              <Text className="">✨</Text>
+              <Text style={{ fontSize: iconBoxSize * 0.45 }}>✨</Text>
             </View>
 
-            <Text className="text-white text-2xl font-bold leading-tight mb-1">
+            {/* Title */}
+            <Text
+              className="font-bold text-white"
+              style={{ fontSize: titleSize, lineHeight: titleSize * 1.25, marginBottom: 6 }}
+            >
               Sua dose de hoje{"\n"}está pronta{" "}
-              <Entypo name="check" size={24} color="#7c3aed" />
+              <Entypo name="check" size={titleSize} color="#7c3aed" />
             </Text>
-            <Text className="text-white/50 text-sm">
+
+            {/* Subtitle */}
+            <Text className="text-white/50" style={{ fontSize: subtitleSize }}>
               Baseada no que{" "}
               <Text style={{ color: "#7c3aed" }}>você estudou</Text>
             </Text>
           </View>
 
-          {/* 3D phone illustration — SVG-style with View layers */}
+          {/* Phone illustration */}
           <Animated.View style={{ opacity: glowOpacity }}>
-            <View className="items-center justify-center" style={{ width: 90, height: 90 }}>
+            <View
+              className="items-center justify-center"
+              style={{ width: illustrationSize, height: illustrationSize }}
+            >
               {/* Glow platform */}
               <View
                 style={{
                   position: "absolute",
                   bottom: 0,
-                  width: 70,
-                  height: 18,
+                  width: illustrationSize * 0.75,
+                  height: illustrationSize * 0.18,
                   borderRadius: 999,
                   backgroundColor: "#7c3aed",
                   opacity: 0.5,
@@ -81,15 +104,14 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
               />
               {/* Phone frame */}
               <View
+                className="items-center justify-center"
                 style={{
-                  width: 50,
-                  height: 72,
-                  borderRadius: 14,
+                  width: phoneWidth,
+                  height: phoneHeight,
+                  borderRadius: phoneWidth * 0.28,
                   borderWidth: 2,
                   borderColor: "rgba(167,139,250,0.6)",
                   backgroundColor: "rgba(109,40,217,0.25)",
-                  alignItems: "center",
-                  justifyContent: "center",
                   shadowColor: "#7c3aed",
                   shadowRadius: 12,
                   shadowOpacity: 0.8,
@@ -97,29 +119,28 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
                 }}
               >
                 <View
+                  className="items-center justify-center"
                   style={{
-                    width: 26,
-                    height: 26,
-                    borderRadius: 13,
+                    width: phoneWidth * 0.55,
+                    height: phoneWidth * 0.55,
+                    borderRadius: phoneWidth * 0.275,
                     borderWidth: 2,
                     borderColor: "rgba(167,139,250,0.9)",
-                    alignItems: "center",
-                    justifyContent: "center",
                   }}
                 >
-                  <Feather name="check" size={14} color="#a78bfa" />
+                  <Feather name="check" size={phoneWidth * 0.28} color="#a78bfa" />
                 </View>
               </View>
             </View>
           </Animated.View>
         </View>
 
-        {/* Divider */}
-        <View className="flex-row items-center mb-4">
-          <Feather name="clock" size={14} color="rgba(255,255,255,0.4)" />
-          <Text className="text-white/40 text-xs ml-2">
+        {/* Divider info */}
+        <View className="flex-row items-center" style={{ marginBottom: cardPadding }}>
+          <Feather name="clock" size={subtitleSize * 1.1} color="rgba(255,255,255,0.4)" />
+          <Text className="text-white/40" style={{ fontSize: subtitleSize, marginLeft: 6 }}>
             5 perguntas
-            <Text className="text-white/25">  |  Revisão rápida</Text>
+            <Text className="text-white/25">{"  |  "}Revisão rápida</Text>
           </Text>
         </View>
 
@@ -127,22 +148,34 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
         <TouchableOpacity
           onPress={onPress}
           activeOpacity={0.85}
-          style={{ borderRadius: 16, overflow: "hidden" }}
+          className="rounded-2xl overflow-hidden"
         >
           <LinearGradient
             colors={["#6d28d9", "#5b21b6"]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 0 }}
-            className="flex-row items-center justify-between px-5 py-4"
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              paddingVertical: cardPadding * 0.85,
+              paddingHorizontal: cardPadding,
+            }}
           >
-            <Text className="text-white text-base font-semibold">
+            <Text className="text-white font-semibold" style={{ fontSize: width * 0.042 }}>
               Começar revisão
             </Text>
             <View
-              className="w-8 h-8 rounded-full items-center justify-center"
-              style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+              className="items-center justify-center"
+              style={{
+                width: width * 0.09,
+                height: width * 0.09,
+                borderRadius: width * 0.045,
+                backgroundColor: "rgba(255,255,255,0.15)",
+                flexShrink: 0,
+              }}
             >
-              <Feather name="arrow-right" size={16} color="white" />
+              <Feather name="arrow-right" size={width * 0.04} color="white" />
             </View>
           </LinearGradient>
         </TouchableOpacity>
@@ -151,4 +184,4 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
   );
 };
 
-export default DoseCard
+export default DoseCard;
