@@ -7,7 +7,8 @@ export default function TabsLayout() {
       tabBar={(props) => <ElixTabBar {...props} />}
       screenOptions={{ headerShown: false }}
     >
-      <Tabs.Screen name="index" />
+      <Tabs.Screen name="home" />
+
     </Tabs>
   );
 }
