@@ -39,7 +39,7 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
       }}
     >
       <LinearGradient
-        colors={["#1a0a2e", "#170d35", "#0f0a1e"]}
+        colors={["#000000", "#190522", "#120325"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{ padding: cardPadding }}
@@ -145,40 +145,45 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
         </View>
 
         {/* CTA Button */}
-        <TouchableOpacity
-          onPress={onPress}
-          activeOpacity={0.85}
-          className="rounded-2xl overflow-hidden"
-        >
-          <LinearGradient
-            colors={["#6d28d9", "#5b21b6"]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              paddingVertical: cardPadding * 0.85,
-              paddingHorizontal: cardPadding,
-            }}
-          >
-            <Text className="text-white font-semibold" style={{ fontSize: width * 0.042 }}>
-              Começar revisão
-            </Text>
-            <View
-              className="items-center justify-center"
-              style={{
-                width: width * 0.09,
-                height: width * 0.09,
-                borderRadius: width * 0.045,
-                backgroundColor: "rgba(255,255,255,0.15)",
-                flexShrink: 0,
-              }}
-            >
-              <Feather name="arrow-right" size={width * 0.04} color="white" />
-            </View>
-          </LinearGradient>
-        </TouchableOpacity>
+      <TouchableOpacity
+  onPress={onPress}
+  activeOpacity={0.85}
+  className="rounded-2xl overflow-hidden"
+>
+  <LinearGradient
+    colors={["#6d28d9", "#5b21b6"]}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 1, y: 0 }}
+    style={{
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center", // 1. Centraliza o conteúdo principal (o texto)
+      paddingVertical: cardPadding * 0.85,
+      paddingHorizontal: cardPadding,
+      position: "relative", // 2. Garante que o ícone absoluto se alinhe em relação ao botão
+    }}
+  >
+    <Text className="text-white font-semibold" style={{ fontSize: width * 0.042 }}>
+      Começar revisão
+    </Text>
+
+    <View
+      className="items-center justify-center"
+      style={{
+        width: width * 0.09,
+        height: width * 0.09,
+        borderRadius: width * 0.045,
+        backgroundColor: "rgba(255,255,255,0.15)",
+        flexShrink: 0,
+        // 3. Posiciona o ícone na extrema direita de forma absoluta
+        position: "absolute",
+        right: cardPadding, 
+      }}
+    >
+      <Feather name="arrow-right" size={width * 0.04} color="white" />
+    </View>
+  </LinearGradient>
+</TouchableOpacity>
       </LinearGradient>
     </View>
   );

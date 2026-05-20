@@ -188,7 +188,7 @@ const LiquidFillCard: FC<LiquidFillCardProps> = ({
       )}
 
       <View style={styles.center} pointerEvents="none">
-        <BlurView intensity={30} tint="dark" style={styles.iconBox}>
+        <BlurView intensity={25} tint="dark" style={styles.iconBox}>
           {typeof icon === "string" ? (
             <Text style={styles.iconEmoji}>{icon}</Text>
           ) : (
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.08)",
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: "rgba(255,255,255,0.3)",
     overflow: "hidden",
     shadowColor: "#000",

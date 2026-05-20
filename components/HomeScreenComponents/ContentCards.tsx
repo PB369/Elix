@@ -19,7 +19,7 @@ const ContentCards = () => {
       <LiquidFillCard
         status="Consolidado"
         title="Neurologia"
-        progress={15}
+        progress={50}
         icon={'🧠'}
         style={{ width: 190 }} // 2. Trava a largura do card
       />
