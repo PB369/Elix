@@ -1,6 +1,7 @@
 import { Feather } from '@expo/vector-icons';
-import { router } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 import { useState } from 'react';
+import '@/global.css'
 import {
     ScrollView,
     StyleSheet,
@@ -47,118 +48,125 @@ const QUESTION = {
 export default function QuizScreen() {
   const { width } = useWindowDimensions();
   const [selected, setSelected] = useState<string | null>(null);
+  const router = useRouter()
 
-
-const [confirmed, setConfirmed] = useState(false); // ← adiciona
+  const [confirmed, setConfirmed] = useState(false); // ← adiciona
 
   const progress = QUESTION.current / QUESTION.total;
 
-function handleSelect(id: string) {
-  if (confirmed) return; // só bloqueia após confirmar
-  setSelected(id);
-}
+  function handleSelect(id: string) {
+    if (confirmed) return; // só bloqueia após confirmar
+    setSelected(id);
+  }
 
-function getOptionStyle(id: string) {
-  if (!confirmed) return styles.optionDefault; // ← era !selected
-  if (id === QUESTION.correctId) return styles.optionCorrect;
-  if (id === selected && selected !== QUESTION.correctId) return styles.optionWrong;
-  return styles.optionDefault;
-}
+  function getOptionStyle(id: string) {
+    if (!confirmed) return styles.optionDefault; // ← era !selected
+    if (id === QUESTION.correctId) return styles.optionCorrect;
+    if (id === selected && selected !== QUESTION.correctId) return styles.optionWrong;
+    return styles.optionDefault;
+  }
 
-function getOptionTextStyle(id: string) {
-  if (!confirmed) return styles.optionText; // ← era !selected
-  if (id === QUESTION.correctId) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
-  if (id === selected && selected !== QUESTION.correctId) return [styles.optionText, { color: '#ff6b6b' }];
-  return styles.optionText;
-}
+  function getOptionTextStyle(id: string) {
+    if (!confirmed) return styles.optionText; // ← era !selected
+    if (id === QUESTION.correctId) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
+    if (id === selected && selected !== QUESTION.correctId) return [styles.optionText, { color: '#ff6b6b' }];
+    return styles.optionText;
+  }
 
- return (
-  <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+  return (
+    <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
 
-    {/* ── Progress bar ── */}
-    <View style={styles.progressWrapper}>
-      <View style={[styles.progressTrack, { width: width - 48 }]}>
-        <View style={[styles.progressFill, { width: (width - 48) * progress }]} />
+      {/* ── Progress Bar ── */}
+      <View style={styles.progressBarWrapper}>
+        <View style={[styles.progressTrack, { width: width - 48 }]}>
+          <View style={[styles.progressFill, { width: (width - 48) * progress }]} />
+        </View>
       </View>
+
+      {/* O segredo está aqui: o ScrollView ganha uma View servindo de container ao redor */}
+      <View style={{ flex: 1 }}>
+        <ScrollView
+          contentContainerStyle={styles.scroll}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* ── Category chip ── */}
+          <View style={styles.chip}>
+            <Text style={styles.chipText}>{QUESTION.category.toUpperCase()}</Text>
+          </View>
+
+          {/* ── Question ── */}
+          <Text style={styles.question}>{QUESTION.title}</Text>
+
+          {/* ── Hint ── */}
+          <Text style={styles.hint}>{QUESTION.hint}</Text>
+
+          {/* ── Options ── */}
+          <View style={styles.optionsList}>
+            {QUESTION.options.map((opt) => (
+              <TouchableOpacity
+                key={opt.id}
+                onPress={() => handleSelect(opt.id)}
+                activeOpacity={0.75}
+                style={[styles.option, getOptionStyle(opt.id)]}
+              >
+                <Text style={getOptionTextStyle(opt.id)}>{opt.label}</Text>
+
+                {/* Ícone de estado */}
+            {!confirmed && (
+    <View style={styles.radioOuter}>
+      {selected === opt.id && (
+        <View style={styles.radioInner} />
+      )}
     </View>
-
-    {/* O segredo está aqui: o ScrollView ganha uma View servindo de container ao redor */}
-    <View style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Category chip ── */}
-        <View style={styles.chip}>
-          <Text style={styles.chipText}>{QUESTION.category.toUpperCase()}</Text>
-        </View>
-
-        {/* ── Question ── */}
-        <Text style={styles.question}>{QUESTION.title}</Text>
-
-        {/* ── Hint ── */}
-        <Text style={styles.hint}>{QUESTION.hint}</Text>
-
-        {/* ── Options ── */}
-        <View style={styles.optionsList}>
-          {QUESTION.options.map((opt) => (
-            <TouchableOpacity
-              key={opt.id}
-              onPress={() => handleSelect(opt.id)}
-              activeOpacity={0.75}
-              style={[styles.option, getOptionStyle(opt.id)]}
-            >
-              <Text style={getOptionTextStyle(opt.id)}>{opt.label}</Text>
-
-              {/* Ícone de estado */}
-           {!confirmed && (
-  <View style={styles.radioOuter}>
-    {selected === opt.id && (
-      <View style={styles.radioInner} />
-    )}
+  )}
+  {confirmed && opt.id === QUESTION.correctId && (
+    <View style={[styles.radioOuter, { borderColor: C.correct, backgroundColor: C.correct }]}>
+      <Feather name="check" size={12} color="#fff" />
+    </View>
+  )}
+  {confirmed && opt.id === selected && selected !== QUESTION.correctId && (
+    <View style={[styles.radioOuter, { borderColor: '#ff6b6b', backgroundColor: '#ff6b6b' }]}>
+      <Feather name="x" size={12} color="#fff" />
+    </View>
+  )}
+  {confirmed && opt.id !== QUESTION.correctId && opt.id !== selected && (
+    <View style={styles.radioOuter} />
+  )}
+          </TouchableOpacity>
+        ))}
+      </View>
+    </ScrollView>
   </View>
-)}
-              {confirmed && opt.id === QUESTION.correctId && (
-                <View style={[styles.radioOuter, { borderColor: C.correct, backgroundColor: C.correct }]}>
-                  <Feather name="check" size={12} color="#fff" />
-                </View>
-              )}
-              {confirmed && opt.id === selected && selected !== QUESTION.correctId && (
-                <View style={[styles.radioOuter, { borderColor: '#ff6b6b', backgroundColor: '#ff6b6b' }]}>
-                  <Feather name="x" size={12} color="#fff" />
-                </View>
-              )}
-              {confirmed && opt.id !== QUESTION.correctId && opt.id !== selected && (
-                <View style={styles.radioOuter} />
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-    </View>
 
-    {/* ── Footer button (Fica fora da área de scroll, fixo embaixo) ── */}
-    <View style={styles.footer}>
-      <TouchableOpacity
-        style={[styles.nextButton, !selected && styles.nextButtonDisabled]}
-        activeOpacity={0.85}
-        disabled={!selected}
-        onPress={() => {
-          if (!confirmed) {
-            setConfirmed(true);
-          } else {
-            router.back();
-          }
-        }}
-      >
-        <Text style={styles.nextButtonText}>
-          {!selected ? 'Selecione uma opção' : !confirmed ? 'Confirmar' : 'Próxima →'}
-        </Text>
-      </TouchableOpacity>
-    </View>
+  {/* ── Footer button (Fica fora da área de scroll, fixo embaixo) ── */}
+  <View style={styles.footer}>
+    <TouchableOpacity
+      style={[styles.nextButton, !selected && styles.nextButtonDisabled]}
+      activeOpacity={0.85}
+      disabled={!selected}
+      onPress={() => {
+        if (!confirmed) {
+          setConfirmed(true);
+        } else {
+          router.back();
+        }
+      }}
+    >
+      <Text style={styles.nextButtonText}>
+        {!selected ? 'Selecione uma opção' : !confirmed ? 'Confirmar' : 'Próxima →'}
+      </Text>
+    </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={0.85}
+      onPress={() => router.back()}
+      className='m-auto my-2 p-2'
+    >
+      <Text className='text-white text-base text-center'>Voltar</Text>
+    </TouchableOpacity>
+  </View>
 
   </SafeAreaView>
-);
+  );
 }
 
 const styles = StyleSheet.create({
@@ -168,7 +176,7 @@ const styles = StyleSheet.create({
   },
 
   // ── Progress ──
-  progressWrapper: {
+  progressBarWrapper: {
     paddingHorizontal: 24,
     paddingTop: 16,
     paddingBottom: 8,
