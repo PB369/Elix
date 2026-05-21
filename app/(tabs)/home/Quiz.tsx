@@ -1,5 +1,5 @@
 import { Feather } from '@expo/vector-icons';
-import { router, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import '@/global.css'
 import {
@@ -30,34 +30,93 @@ const C = {
 };
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
-const QUESTIONS = [{
-  category: 'Neurociência Aplicada',
-  title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-  hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
-  options: [
-    { id: 'a', label: 'Córtex Pré-frontal' },
-    { id: 'b', label: 'Hipocampo' },
-    { id: 'c', label: 'Cerebelo' },
-    { id: 'd', label: 'Amígdala' },
-  ],
-  correctId: 'b',
-}];
+const QUESTIONS = [
+  {
+    category: 'Neurociência Aplicada',
+    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
+    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
+    options: [
+      { id: 'a', label: 'Córtex Pré-frontal' },
+      { id: 'b', label: 'Hipocampo' },
+      { id: 'c', label: 'Cerebelo' },
+      { id: 'd', label: 'Amígdala' },
+    ],
+    correctId: 'b',
+  },
+  {
+    category: 'Neurociência Aplicada',
+    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
+    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
+    options: [
+      { id: 'a', label: 'Hipocampo' },
+      { id: 'b', label: 'Córtex Pré-frontal' },
+      { id: 'c', label: 'Amígdala' },
+      { id: 'd', label: 'Cerebelo' },
+    ],
+    correctId: 'b',
+  },
+  {
+    category: 'Neurociência Aplicada',
+    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
+    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
+    options: [
+      { id: 'a', label: 'Amígdala' },
+      { id: 'b', label: 'Córtex Pré-frontal' },
+      { id: 'c', label: 'Cerebelo' },
+      { id: 'd', label: 'Hipocampo' },
+    ],
+    correctId: 'b',
+  }
+];
 
 const amountOfQuestions = QUESTIONS.length;
 
 export default function QuizScreen() {
   const { width } = useWindowDimensions();
-  const [selected, setSelected] = useState<string | null>(null);
   const router = useRouter()
 
-  const [confirmed, setConfirmed] = useState(false); // ← adiciona
+  const [selected, setSelected] = useState<string | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+
+  // const currentQuestion = QUESTIONS[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex === QUESTIONS.length - 1;
+  const isFirstQuestion = currentQuestionIndex === 0;
 
   const progress = (currentQuestionIndex + 1) / amountOfQuestions;
 
   function handleSelect(id: string) {
-    if (confirmed) return; // só bloqueia após confirmar
+    if (confirmed) return;
     setSelected(id);
+  }
+
+  function goToQuestion(index: number) {
+    setCurrentQuestionIndex(index);
+    setSelected(null);
+    setConfirmed(false);
+  }
+
+  function handleNext() {
+    if (!confirmed) {
+      setConfirmed(true);
+      return;
+    }
+
+    if (isLastQuestion) {
+      router.replace('/(tabs)/home');
+      return;
+    }
+
+    goToQuestion(currentQuestionIndex + 1);
+  }
+
+  function handleBack() {
+    if (!isFirstQuestion) {
+      goToQuestion(currentQuestionIndex - 1);
+      return;
+    }
+
+    router.back();
   }
 
   function getOptionStyle(id: string) {
@@ -142,27 +201,32 @@ export default function QuizScreen() {
   {/* ── Footer button (Fica fora da área de scroll, fixo embaixo) ── */}
   <View style={styles.footer}>
     <TouchableOpacity
-      style={[styles.nextButton, !selected && styles.nextButtonDisabled]}
+      style={[
+        styles.nextButton,
+        !selected && !confirmed && styles.nextButtonDisabled
+      ]}
       activeOpacity={0.85}
-      disabled={!selected}
-      onPress={() => {
-        if (!confirmed) {
-          setConfirmed(true);
-        } else {
-          router.back();
-        }
-      }}
+      disabled={!selected && !confirmed}
+      onPress={handleNext}
     >
       <Text style={styles.nextButtonText}>
-        {!selected ? 'Selecione uma opção' : !confirmed ? 'Confirmar' : progress === 1 ? 'Finalizar' : 'Próxima →'}
+        {!selected && !confirmed
+          ? 'Selecione uma opção'
+          : !confirmed
+            ? 'Confirmar'
+            : isLastQuestion
+              ? 'Finalizar'
+              : 'Próxima →'}
       </Text>
     </TouchableOpacity>
     <TouchableOpacity
       activeOpacity={0.85}
-      onPress={() => router.back()}
+      onPress={handleBack}
       className='m-auto my-2 p-2'
     >
-      <Text className='text-white text-base text-center'>Voltar</Text>
+      <Text className='text-white text-base text-center'>
+        Voltar
+      </Text>
     </TouchableOpacity>
   </View>
 
