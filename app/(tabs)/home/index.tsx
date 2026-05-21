@@ -10,9 +10,6 @@ import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import { Animated, Text, TouchableOpacity, View } from "react-native";
 import '../../../global.css';
 
-
-
-
 export default function HomeScreen() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
@@ -38,7 +35,6 @@ export default function HomeScreen() {
     []
   );
 
-
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -55,26 +51,17 @@ export default function HomeScreen() {
   }, []);
 
   return (
-
-   
     <View className="flex-1 bg-[#080510]">
-        <Animated.View
-          style={{ flex: 1, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
-        >
-        
-          <Header/>
-          <DoseCard onPress={() => {router.push("/(tabs)/home/Quiz")}} />
-          <YourContents/>
-          <ContentCards/>
-      
-        </Animated.View>
-        <UploadButton onPress={handlePresentModalPress}/>
-
-
-
-
-
-             {/* O BOTTOM SHEET EM SI */}
+      <Animated.View
+        style={{ flex: 1, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
+      >
+        <Header/>
+        <DoseCard onPress={() => {router.push("/(tabs)/home/Quiz")}} />
+        <YourContents/>
+        <ContentCards/>
+      </Animated.View>
+      <UploadButton onPress={handlePresentModalPress}/>
+      {/* O BOTTOM SHEET EM SI */}
       <BottomSheetModal
         ref={bottomSheetModalRef}
         index={0} // abre no primeiro ponto
@@ -83,14 +70,11 @@ export default function HomeScreen() {
         backgroundStyle={{ backgroundColor: 'black' }}
       >
         <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
-            
               <TouchableOpacity onPress={()=>{ bottomSheetModalRef.current?.dismiss();router.push('/home/AddContent')}} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
-                
                 {/* Ícone posicionado à esquerda com fundo leve */}
                 <View className="mr-4 p-2.5 rounded-full">
                   <AntDesign name="plus" size={24} color="#d3a0fc" />
                 </View>
-
                 {/* Bloco de texto empilhado (Título em cima, Subtítulo em baixo) */}
                 <View className="flex-1">
                   <Text className="text-lg font-semibold text-white mb-1">
@@ -100,12 +84,9 @@ export default function HomeScreen() {
                     Inclua Documentos, anotações de aula, o que estudou
                   </Text>
                 </View>
-
               </TouchableOpacity>
-      
         </BottomSheetView>
       </BottomSheetModal>
-           
     </View>
   );
 }

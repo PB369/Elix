@@ -17,7 +17,6 @@ const ContentCards = () => {
       className="w-full h-full"
     >
       <LiquidFillCard
-        status="Consolidado"
         title="Neurologia"
         progress={15}
         icon={'🧠'}
@@ -25,14 +24,12 @@ const ContentCards = () => {
       />
       
       <LiquidFillCard
-        status="Em reforço"
         title="Sistema Digestivo"
         progress={20}
         icon={'👩‍⚕️'}
         style={{ width:  190 }} // 2. Trava a largura do card
       />
-            <LiquidFillCard
-        status="Consolidado"
+      <LiquidFillCard
         title="Cardio"
         progress={70}
         icon={'❤️'}
@@ -40,7 +37,6 @@ const ContentCards = () => {
       />
       
       <LiquidFillCard
-        status="Em reforço"
         title="Neurologia"
         progress={65}
         icon={'😁'}
