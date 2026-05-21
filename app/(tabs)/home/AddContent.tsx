@@ -79,121 +79,125 @@ console.log("Chama a api")
 
 
         {/* Tab Selector */}
-<View style={styles.tabContainer}>
-  <TouchableOpacity
-    style={[styles.tab, activeTab === 'descricao' && styles.tabActive]}
-    onPress={() => setActiveTab('descricao')}
-    activeOpacity={0.7}
-  >
-    <Text style={[styles.tabText, activeTab === 'descricao' && styles.tabTextActive]}>
-      Descrição
-    </Text>
-  </TouchableOpacity>
-  <TouchableOpacity
-    style={[styles.tab, activeTab === 'arquivos' && styles.tabActive]}
-    onPress={() => setActiveTab('arquivos')}
-    activeOpacity={0.7}
-  >
-    <Text style={[styles.tabText, activeTab === 'arquivos' && styles.tabTextActive]}>
-      Arquivos
-    </Text>
-  </TouchableOpacity>
-</View>
+        <View style={styles.tabContainer}>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'descricao' && styles.tabActive]}
+            onPress={() => setActiveTab('descricao')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.tabText, activeTab === 'descricao' && styles.tabTextActive]}>
+              Descrição
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.tab, activeTab === 'arquivos' && styles.tabActive]}
+            onPress={() => setActiveTab('arquivos')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.tabText, activeTab === 'arquivos' && styles.tabTextActive]}>
+              Arquivos
+            </Text>
+          </TouchableOpacity>
+        </View>
 
-       <KeyboardAwareScrollView
-  style={{ flex: 1 }}
-  contentContainerStyle={styles.scrollContent}
-  showsVerticalScrollIndicator={false}
-  keyboardShouldPersistTaps="handled"
-  enableOnAndroid={true}
-  extraScrollHeight={20}
->   
-
-
-            {activeTab === 'descricao' && (
-         
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.iconBox}>
-                <Feather name="edit-2" size={22} color={C.primaryContainer} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.sectionTitle}>Descrição do estudo</Text>
-                <Text style={styles.sectionSubtitle}>
-                  Conte o que você quer focar e deixe a{' '}
-                  <Text style={{ color: C.primaryContainer, fontFamily: 'Manrope_600SemiBold' }}>
-                    Elix
-                  </Text>{' '}
-                  criar sua revisão ideal
-                </Text>
-              </View>
-            </View>
-
-            {/* Textarea */}
-            <View
-              style={[
-                styles.textAreaWrapper,
-                isFocused && styles.textAreaWrapperFocused,
-              ]}
-            >
-              <TextInput
-                style={styles.textArea}
-                placeholder="Ex: revisar hipotálamo, neuro-hipófise e glândula tireoide"
-                placeholderTextColor={C.onSurfaceVariant + '80'}
-                multiline
-                maxLength={maxChars}
-                value={description}
-                onChangeText={setDescription}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                textAlignVertical="top"
-              />
-              <Text style={styles.charCount}>
-                {description.length}/{maxChars}
-              </Text>
-            </View>
-          </View>
-
-          )}
-
-
-          {activeTab === 'arquivos' && (
-      
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <View style={styles.iconBox}>
-                <Feather name="file-text" size={22} color={C.primaryContainer} />
-              </View>
-              <View style={{ flex: 1 }}>
-                <Text style={styles.sectionTitle}>Materiais</Text>
-                <Text style={styles.sectionSubtitle}>PDFs, slides ou anotações</Text>
-              </View>
-            </View>
-
-            {/* Upload area com borda tracejada */}
-            <Animated.View style={{ transform: [{ scale: pressAnim }] }}>
-              <TouchableOpacity
-                onPress={handleUploadPress}
-                activeOpacity={0.8}
-                style={styles.uploadArea}
-              >
-                {/* Borda tracejada simulada com View aninhadas */}
-                <View style={styles.uploadInner}>
-                  <View style={styles.uploadIconWrapper}>
-                    <Feather name="file-text" size={32} color={C.primaryContainer} />
-                  </View>
-                  <Text style={styles.uploadTitle}>Selecionar arquivos</Text>
-                  <Text style={styles.uploadSubtitle}>
-                    Escolha arquivos do seu dispositivo
+        <KeyboardAwareScrollView
+          style={{ flex: 1 }}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          enableOnAndroid={true}
+          extraScrollHeight={20}
+        >
+          {activeTab === 'descricao' && (
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <View style={styles.iconBox}>
+                  <Feather name="edit-2" size={22} color={C.primaryContainer} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.sectionTitle}>Descrição do estudo</Text>
+                  <Text style={styles.sectionSubtitle}>
+                    Conte o que você quer focar e deixe a{' '}
+                    <Text style={{ color: C.primaryContainer, fontFamily: 'Manrope_600SemiBold' }}>
+                      Elix
+                    </Text>{' '}
+                    criar sua revisão ideal
                   </Text>
                 </View>
-              </TouchableOpacity>
-            </Animated.View>
-          </View>
+              </View>
+
+              {/* Textarea */}
+              <View
+                style={[
+                  isFocused && {
+                    // shadowColor: "#000000", // Este shadowColor é a causa do bug de deseleção do TextInput
+                    // shadowOpacity: 0.15,
+                    // shadowRadius: 8,
+                  }
+                ]}
+              >
+                <View
+                  className='rounded-2xl border p-4 min-h-8'
+                  style={[
+                    { borderColor: '#4c4354' },
+                    isFocused && { borderColor: C.primaryContainer }
+                  ]}
+                >
+                  <TextInput
+                    className="text-base text-[#eadfee] min-h-[100px]"
+                    placeholder="Ex: revisar hipotálamo, neuro-hipófise e glândula tireoide"
+                    placeholderTextColor={C.onSurfaceVariant + '80'}
+                    multiline
+                    maxLength={maxChars}
+                    value={description}
+                    onChangeText={setDescription}
+                    onFocus={() => setIsFocused(true)}
+                    onBlur={() => setIsFocused(false)}
+                    textAlignVertical="top"
+                  />
+                    <Text style={styles.charCount}>
+                      {description.length}/{maxChars}
+                    </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {activeTab === 'arquivos' && (
+            <View style={styles.section}>
+              <View style={styles.sectionHeader}>
+                <View style={styles.iconBox}>
+                  <Feather name="file-text" size={22} color={C.primaryContainer} />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Text style={styles.sectionTitle}>Materiais</Text>
+                  <Text style={styles.sectionSubtitle}>PDFs, slides ou anotações</Text>
+                </View>
+              </View>
+
+              {/* Upload area com borda tracejada */}
+              <Animated.View style={{ transform: [{ scale: pressAnim }] }}>
+                <TouchableOpacity
+                  onPress={handleUploadPress}
+                  activeOpacity={0.8}
+                  style={styles.uploadArea}
+                >
+                  {/* Borda tracejada simulada com View aninhadas */}
+                  <View style={styles.uploadInner}>
+                    <View style={styles.uploadIconWrapper}>
+                      <Feather name="file-text" size={32} color={C.primaryContainer} />
+                    </View>
+                    <Text style={styles.uploadTitle}>Selecionar arquivos</Text>
+                    <Text style={styles.uploadSubtitle}>
+                      Escolha arquivos do seu dispositivo
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
           )}
 
           {/* Espaço para o botão fixo não cobrir conteúdo */}
-        
         </KeyboardAwareScrollView>
 
         {/* ── Botão Gerar fixo ── */}
@@ -318,11 +322,6 @@ tabTextActive: {
   },
   textAreaWrapperFocused: {
     borderColor: C.primaryContainer,
-    shadowColor: C.primaryContainer,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 4,
   },
   textArea: {
     fontFamily: 'Manrope_400Regular',
