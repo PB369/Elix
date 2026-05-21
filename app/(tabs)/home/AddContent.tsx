@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import * as DocumentPicker from 'expo-document-picker';
+
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // ─── Design Tokens ────────────────────────────────────────────────────────────
@@ -37,6 +39,7 @@ export default function AddContent() {
   const [description, setDescription] = useState('');
   const [isFocused, setIsFocused] = useState(false);
   const pressAnim = useRef(new Animated.Value(1)).current;
+  const [files, setFiles] = useState<any[]>([]);
 
   const maxChars = 1000;
   
@@ -46,20 +49,36 @@ export default function AddContent() {
       Animated.timing(pressAnim, { toValue: 0.97, duration: 80, useNativeDriver: true }),
       Animated.timing(pressAnim, { toValue: 1, duration: 80, useNativeDriver: true }),
     ]).start();
+
+    handlePickFile();
   }
 
+  async function handleGenerate() {
+    // chama sua API aqui
+    // const questions = await generateQuestions(description);
+    
+  //   router.push({
+  //     pathname: '/home/QuizScreen',
+  //     params: { questions: JSON.stringify(questions) }
+  //   });
+  // }
+  console.log("Chama a api")
+  }
 
-async function handleGenerate() {
-  // chama sua API aqui
-  // const questions = await generateQuestions(description);
-  
-//   router.push({
-//     pathname: '/home/QuizScreen',
-//     params: { questions: JSON.stringify(questions) }
-//   });
-// }
-console.log("Chama a api")
-}
+  async function handlePickFile() {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: '*/*', // ou 'application/pdf'
+      multiple: true,
+      copyToCacheDirectory: true,
+    });
+
+    if (result.canceled) return;
+
+    const files = result.assets;
+    console.log(files);
+
+    setFiles(files); // você cria esse state
+  }
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
@@ -130,7 +149,7 @@ console.log("Chama a api")
               <View
                 style={[
                   isFocused && {
-                    // shadowColor: "#000000", // Este shadowColor é a causa do bug de deseleção do TextInput
+                    // shadowColor: "C.primaryContainer", // Este shadowColor é a causa do bug de deseleção do TextInput
                     // shadowOpacity: 0.15,
                     // shadowRadius: 8,
                   }
