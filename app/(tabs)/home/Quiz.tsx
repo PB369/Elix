@@ -1,25 +1,14 @@
 import { Feather } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
-    useWindowDimensions,
-} from 'react-native';
+import { ScrollView, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
 const C = {
   surface:                '#16111b',
-  surfaceContainerLow:    '#1f1924',
-  surfaceContainer:       '#231d28',
   surfaceContainerHigh:   '#2e2832',
   primaryContainer:       '#8a2be2',
   onPrimaryContainer:     '#eed9ff',
-  primary:                '#dcb8ff',
   onSurface:              '#eadfee',
   onSurfaceVariant:       '#cfc2d7',
   outlineVariant:         '#4c4354',
@@ -28,278 +17,275 @@ const C = {
   correct:                '#00c896',
 };
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-const QUESTION = {
-  category: 'Neurociência Aplicada',
-  total: 5,
-  current: 3,
-  title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-  hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
-  options: [
-    { id: 'a', label: 'Córtex Pré-frontal' },
-    { id: 'b', label: 'Hipocampo' },
-    { id: 'c', label: 'Cerebelo' },
-    { id: 'd', label: 'Amígdala' },
-  ],
-  correctId: 'b',
-};
+const QUESTIONS = [
+  {
+    category: 'Neurociência Aplicada',
+    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
+    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
+    options: [
+      { id: 'a', label: 'Córtex Pré-frontal' },
+      { id: 'b', label: 'Hipocampo' },
+      { id: 'c', label: 'Cerebelo' },
+      { id: 'd', label: 'Amígdala' },
+    ],
+    correctId: 'b',
+  },
+  {
+    category: 'Neurociência Aplicada',
+    title: 'Qual neurotransmissor está centralmente envolvido no sistema de recompensa e na motivação?',
+    hint: 'Sua liberação gera a sensação de antecipação de um benefício ou prazer.',
+    options: [
+      { id: 'a', label: 'Serotonina' },
+      { id: 'b', label: 'GABA' },
+      { id: 'c', label: 'Dopamina' },
+      { id: 'd', label: 'Acetilcolina' },
+    ],
+    correctId: 'c',
+  },
+  {
+    category: 'Neurociência Aplicada',
+    title: 'A capacidade do cérebro de se reorganizar e formar novas conexões ao longo da vida é chamada de:',
+    hint: 'Pense na maleabilidade do tecido nervoso frente a novos aprendizados ou lesões.',
+    options: [
+      { id: 'a', label: 'Neuroplasticidade' },
+      { id: 'b', label: 'Mielinização' },
+      { id: 'c', label: 'Homeostase sináptica' },
+      { id: 'd', label: 'Potenciação de Curto Prazo' },
+    ],
+    correctId: 'a',
+  },
+];
 
 export default function QuizScreen() {
   const { width } = useWindowDimensions();
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
+  const [confirmed, setConfirmed] = useState(false);
 
+  const question = QUESTIONS[currentIndex];
+  const progress = (currentIndex + 1) / QUESTIONS.length;
+  const isLast = currentIndex === QUESTIONS.length - 1;
 
-const [confirmed, setConfirmed] = useState(false); // ← adiciona
+  function handleSelect(id: string) {
+    if (confirmed) return;
+    setSelected(id);
+  }
 
-  const progress = QUESTION.current / QUESTION.total;
+  function handleNextStep() {
+    if (!confirmed) {
+      setConfirmed(true);
+    } else if (!isLast) {
+      setCurrentIndex(i => i + 1);
+      setSelected(null);
+      setConfirmed(false);
+    } else {
+      router.back();
+    }
+  }
 
-function handleSelect(id: string) {
-  if (confirmed) return; // só bloqueia após confirmar
-  setSelected(id);
-}
+  function getOptionBorder(id: string) {
+    if (!confirmed) {
+      return selected === id
+        ? { borderWidth: 1.5, borderColor: C.primaryContainer }
+        : {};
+    }
+    if (id === question.correctId) return { borderWidth: 1.5, borderColor: C.correct };
+    if (id === selected) return { borderWidth: 1.5, borderColor: '#ff6b6b' };
+    return {};
+  }
 
-function getOptionStyle(id: string) {
-  if (!confirmed) return styles.optionDefault; // ← era !selected
-  if (id === QUESTION.correctId) return styles.optionCorrect;
-  if (id === selected && selected !== QUESTION.correctId) return styles.optionWrong;
-  return styles.optionDefault;
-}
+  function getOptionTextColor(id: string): string {
+    if (!confirmed) return C.onSurface;
+    if (id === question.correctId) return C.correct;
+    if (id === selected) return '#ff6b6b';
+    return C.onSurface;
+  }
 
-function getOptionTextStyle(id: string) {
-  if (!confirmed) return styles.optionText; // ← era !selected
-  if (id === QUESTION.correctId) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
-  if (id === selected && selected !== QUESTION.correctId) return [styles.optionText, { color: '#ff6b6b' }];
-  return styles.optionText;
-}
+  const buttonLabel = !selected
+    ? 'Selecione uma opção'
+    : !confirmed
+    ? 'Confirmar'
+    : isLast
+    ? 'Finalizar Simulado'
+    : 'Próxima pergunta →';
 
- return (
-  <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
+  const progressWidth = (width - 48 - 40 - 12) * progress; // desconta botão X + gap
 
-    {/* ── Progress bar ── */}
-    <View style={styles.progressWrapper}>
-      <View style={[styles.progressTrack, { width: width - 48 }]}>
-        <View style={[styles.progressFill, { width: (width - 48) * progress }]} />
-      </View>
-    </View>
+  return (
+    <SafeAreaView className="flex-1" style={{ backgroundColor: C.surface }} edges={['top', 'bottom']}>
 
-    {/* O segredo está aqui: o ScrollView ganha uma View servindo de container ao redor */}
-    <View style={{ flex: 1 }}>
-      <ScrollView
-        contentContainerStyle={styles.scroll}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* ── Category chip ── */}
-        <View style={styles.chip}>
-          <Text style={styles.chipText}>{QUESTION.category.toUpperCase()}</Text>
+      {/* ── Header: botão X + progress bar ── */}
+      <View className="flex-row items-center px-6 pt-4 pb-3 gap-3">
+
+        {/* Botão X */}
+        <TouchableOpacity
+          onPress={() => router.back()}
+          activeOpacity={0.7}
+          className="items-center justify-center"
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 18,
+            backgroundColor: C.surfaceContainerHigh,
+            flexShrink: 0,
+          }}
+        >
+          <Feather name="x" size={16} color={C.onSurfaceVariant} />
+        </TouchableOpacity>
+
+        {/* Progress track */}
+        <View
+          className="flex-1 rounded-full overflow-hidden"
+          style={{ height: 10, backgroundColor: C.surfaceContainerHigh }}
+        >
+          <View
+            className="h-full rounded-full"
+            style={{
+              width: progressWidth,
+              backgroundColor: C.primaryContainer,
+            }}
+          />
         </View>
 
-        {/* ── Question ── */}
-        <Text style={styles.question}>{QUESTION.title}</Text>
-
-        {/* ── Hint ── */}
-        <Text style={styles.hint}>{QUESTION.hint}</Text>
-
-        {/* ── Options ── */}
-        <View style={styles.optionsList}>
-          {QUESTION.options.map((opt) => (
-            <TouchableOpacity
-              key={opt.id}
-              onPress={() => handleSelect(opt.id)}
-              activeOpacity={0.75}
-              style={[styles.option, getOptionStyle(opt.id)]}
-            >
-              <Text style={getOptionTextStyle(opt.id)}>{opt.label}</Text>
-
-              {/* Ícone de estado */}
-           {!confirmed && (
-  <View style={styles.radioOuter}>
-    {selected === opt.id && (
-      <View style={styles.radioInner} />
-    )}
-  </View>
-)}
-              {confirmed && opt.id === QUESTION.correctId && (
-                <View style={[styles.radioOuter, { borderColor: C.correct, backgroundColor: C.correct }]}>
-                  <Feather name="check" size={12} color="#fff" />
-                </View>
-              )}
-              {confirmed && opt.id === selected && selected !== QUESTION.correctId && (
-                <View style={[styles.radioOuter, { borderColor: '#ff6b6b', backgroundColor: '#ff6b6b' }]}>
-                  <Feather name="x" size={12} color="#fff" />
-                </View>
-              )}
-              {confirmed && opt.id !== QUESTION.correctId && opt.id !== selected && (
-                <View style={styles.radioOuter} />
-              )}
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-    </View>
-
-    {/* ── Footer button (Fica fora da área de scroll, fixo embaixo) ── */}
-    <View style={styles.footer}>
-      <TouchableOpacity
-        style={[styles.nextButton, !selected && styles.nextButtonDisabled]}
-        activeOpacity={0.85}
-        disabled={!selected}
-        onPress={() => {
-          if (!confirmed) {
-            setConfirmed(true);
-          } else {
-            router.back();
-          }
-        }}
-      >
-        <Text style={styles.nextButtonText}>
-          {!selected ? 'Selecione uma opção' : !confirmed ? 'Confirmar' : 'Próxima →'}
+        {/* Contador */}
+        <Text
+          style={{
+            fontFamily: 'Manrope_600SemiBold',
+            fontSize: 12,
+            color: C.onSurfaceVariant,
+            flexShrink: 0,
+          }}
+        >
+          {currentIndex + 1}/{QUESTIONS.length}
         </Text>
-      </TouchableOpacity>
-    </View>
+      </View>
 
-  </SafeAreaView>
-);
+      {/* ── Scroll ── */}
+      <View className="flex-1">
+        <ScrollView
+          contentContainerStyle={{ paddingHorizontal: 24, paddingTop: 20, paddingBottom: 16 }}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Category chip */}
+          <View
+            className="self-start rounded-full px-3 py-1 mb-5"
+            style={{ backgroundColor: C.secondaryContainer }}
+          >
+            <Text style={{
+              fontFamily: 'Manrope_600SemiBold',
+              fontSize: 10,
+              letterSpacing: 0.8,
+              color: C.onSecondaryContainer,
+            }}>
+              {question.category.toUpperCase()}
+            </Text>
+          </View>
+
+          {/* Question */}
+          <Text style={{
+            fontWeight:600,
+            fontSize: 30,
+            lineHeight: 32,
+            color: C.onSurface,
+            marginBottom: 16,
+            letterSpacing: -0.4,
+          }}>
+            {question.title}
+          </Text>
+
+          {/* Hint */}
+          <Text style={{
+            fontFamily: 'Manrope_400Regular',
+            fontSize: 14,
+            lineHeight: 22,
+            color: C.onSurfaceVariant,
+            marginBottom: 28,
+          }}>
+            {question.hint}
+          </Text>
+
+          {/* Options */}
+          <View style={{ gap: 10 }}>
+            {question.options.map((opt) => (
+              <TouchableOpacity
+                key={opt.id}
+                onPress={() => handleSelect(opt.id)}
+                activeOpacity={0.75}
+                className="flex-row items-center justify-between px-5 rounded-2xl"
+                style={[
+                  { paddingVertical: 18, backgroundColor: C.surfaceContainerHigh },
+                  getOptionBorder(opt.id),
+                ]}
+              >
+                <Text
+                  className="flex-1"
+                  style={{
+                    fontFamily: confirmed && opt.id === question.correctId
+                      ? 'Manrope_700Bold'
+                      : 'Manrope_500Medium',
+                    fontSize: 15,
+                    color: getOptionTextColor(opt.id),
+                  }}
+                >
+                  {opt.label}
+                </Text>
+
+                {/* Radio / result icon */}
+                {!confirmed && (
+                  <View className="items-center justify-center"
+                    style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, borderColor: C.outlineVariant, flexShrink: 0 }}
+                  >
+                    {selected === opt.id && (
+                      <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: C.primaryContainer }} />
+                    )}
+                  </View>
+                )}
+                {confirmed && opt.id === question.correctId && (
+                  <View className="items-center justify-center"
+                    style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: C.correct, flexShrink: 0 }}
+                  >
+                    <Feather name="check" size={12} color="#fff" />
+                  </View>
+                )}
+                {confirmed && opt.id === selected && opt.id !== question.correctId && (
+                  <View className="items-center justify-center"
+                    style={{ width: 22, height: 22, borderRadius: 11, backgroundColor: '#ff6b6b', flexShrink: 0 }}
+                  >
+                    <Feather name="x" size={12} color="#fff" />
+                  </View>
+                )}
+                {confirmed && opt.id !== question.correctId && opt.id !== selected && (
+                  <View style={{ width: 22, height: 22, borderRadius: 11, borderWidth: 1.5, borderColor: C.outlineVariant, flexShrink: 0 }} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
+
+      {/* ── Footer ── */}
+      <View className="px-6 pb-4 pt-3" style={{ backgroundColor: C.surface }}>
+        <TouchableOpacity
+          onPress={handleNextStep}
+          disabled={!selected}
+          activeOpacity={0.85}
+          className="h-14 rounded-full items-center justify-center"
+          style={{
+            backgroundColor: C.primaryContainer,
+            opacity: !selected ? 0.4 : 1,
+            shadowColor: C.primaryContainer,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.4,
+            shadowRadius: 16,
+            elevation: 8,
+          }}
+        >
+          <Text style={{ fontFamily: 'Manrope_700Bold', fontSize: 17, color: C.onPrimaryContainer }}>
+            {buttonLabel}
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+    </SafeAreaView>
+  );
 }
-
-const styles = StyleSheet.create({
-  safe: {
-    flex: 1,
-    backgroundColor: C.surface,
-  },
-
-  // ── Progress ──
-  progressWrapper: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 8,
-  },
-  radioInner: {
-  width: 12,
-  height: 12,
-  borderRadius: 6,
-  backgroundColor: C.primaryContainer,
-},
-  progressTrack: {
-    height: 6,
-    backgroundColor: C.surfaceContainerHigh,
-    borderRadius: 999,
-    overflow: 'hidden',
-  },
-  progressFill: {
-    height: '100%',
-    backgroundColor: C.primaryContainer,
-    borderRadius: 999,
-  },
-
-  // ── Scroll ──
-  scroll: {
-    paddingHorizontal: 24,
-    paddingTop: 24,
-    paddingBottom: 16,
-  },
-
-  // ── Chip ──
-  chip: {
-    alignSelf: 'flex-start',
-    backgroundColor: C.secondaryContainer,
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    marginBottom: 20,
-  },
-  chipText: {
-    fontFamily: 'Manrope_600SemiBold',
-    fontSize: 10,
-    letterSpacing: 0.8,
-    color: C.onSecondaryContainer,
-  },
-
-  // ── Question ──
-  question: {
-    fontFamily: 'Manrope_800ExtraBold',
-    fontSize: 26,
-    lineHeight: 34,
-    color: C.onSurface,
-    marginBottom: 20,
-    letterSpacing: -0.4,
-  },
-
-  // ── Hint ──
-  hint: {
-    fontFamily: 'Manrope_400Regular',
-    fontSize: 14,
-    lineHeight: 22,
-    color: C.onSurfaceVariant,
-    marginBottom: 32,
-  },
-
-  // ── Options ──
-  optionsList: {
-    gap: 10,
-  },
-  option: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 18,
-    borderRadius: 16,
-  },
-  optionDefault: {
-    backgroundColor: C.surfaceContainerHigh,
-  },
-  optionCorrect: {
-    backgroundColor: C.surfaceContainerHigh,
-    borderWidth: 1.5,
-    borderColor: C.correct,
-  },
-  optionWrong: {
-    backgroundColor: C.surfaceContainerHigh,
-    borderWidth: 1.5,
-    borderColor: '#ff6b6b',
-  },
-  optionText: {
-    fontFamily: 'Manrope_500Medium',
-    fontSize: 15,
-    color: C.onSurface,
-    flex: 1,
-  },
-  radioOuter: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 1.5,
-    borderColor: C.outlineVariant,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-
-  // ── Footer ──
- footer: {
-  paddingHorizontal: 24,
-  paddingBottom: 16,
-  paddingTop: 12,
-  backgroundColor: C.surface, // ← adiciona
-},
-  nextButton: {
-    height: 58,
-    backgroundColor: C.primaryContainer,
-    borderRadius: 999,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: C.primaryContainer,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.4,
-    shadowRadius: 16,
-    elevation: 8,
-  },
-  nextButtonDisabled: {
-    opacity: 0.45,
-  },
-  nextButtonText: {
-    fontFamily: 'Manrope_700Bold',
-    fontSize: 17,
-    color: C.onPrimaryContainer,
-  },
-});
