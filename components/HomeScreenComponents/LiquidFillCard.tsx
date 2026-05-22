@@ -114,7 +114,7 @@ const WaveSvg: FC<{
       sub.remove();
     };
   }, [W, H]); // W e H no array — o loop recria se o layout mudar
-
+  
   return (
     <Svg width={W} height={H} style={StyleSheet.absoluteFill}>
       <Defs>
@@ -133,8 +133,8 @@ const WaveSvg: FC<{
 const LiquidFillCard: FC<LiquidFillCardProps> = ({
   title    = "Neurologia",
   icon,
-  status   = "Consolidado",
   progress = 0,
+  status   = progress > 55 ? "Consolidado" : "Em reforço",
   height   = 200,
   style,
 }) => {
