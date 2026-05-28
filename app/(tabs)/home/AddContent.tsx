@@ -46,7 +46,7 @@ export default function AddContent() {
       Animated.timing(pressAnim, { toValue: 0.97, duration: 80, useNativeDriver: true }),
       Animated.timing(pressAnim, { toValue: 1, duration: 80, useNativeDriver: true }),
     ]).start();
-  }
+}
 
 
 async function handleGenerate() {
@@ -118,7 +118,7 @@ console.log("Chama a api")
                 <Feather name="edit-2" size={22} color={C.primaryContainer} />
               </View>
               <View style={{ flex: 1 }}>
-                <Text style={styles.sectionTitle}>Descrição do estudo</Text>
+                <Text style={styles.sectionTitle}>O que você estudou?</Text>
                 <Text style={styles.sectionSubtitle}>
                   Conte o que você quer focar e deixe a{' '}
                   <Text style={{ color: C.primaryContainer, fontFamily: 'Manrope_600SemiBold' }}>
