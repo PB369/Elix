@@ -1,7 +1,15 @@
-import { ScrollView } from "react-native";
+import { ScrollView, useWindowDimensions } from "react-native";
 import LiquidFillCard from "./LiquidFillCard";
+import json from "../../app/Data/data.json"
+
+
+console.log(json["macrotemas"])
+const json1 = json.macrotemas
+console.log(json1)
 
 const ContentCards = () => {
+
+   const { width } = useWindowDimensions();
   return (
     <ScrollView
       horizontal // 1. Torna a rolagem horizontal
@@ -13,39 +21,26 @@ const ContentCards = () => {
       }}
       // (Opcional) Propriedades para um efeito de carrossel suave:
       decelerationRate="fast"
-      snapToInterval={190+ 16} // Largura do card + gap
+      snapToInterval={(width * 0.48) + 16} // Largura do card + gap
       className="w-full h-full"
     >
-      <LiquidFillCard
-        status="Consolidado"
-        title="Neurologia"
+
+    {json1.map((item) => (
+        // Always include a unique 'key' for list items
+             <LiquidFillCard
+        status={item.status_consolidacao}
+        title={item.nome}
         progress={50}
         icon={'🧠'}
-        style={{ width: 190 }} // 2. Trava a largura do card
+        style={{ width: width * 0.48}} // 2. Trava a largura do card
       />
       
-      <LiquidFillCard
-        status="Em reforço"
-        title="Sistema Digestivo"
-        progress={20}
-        icon={'👩‍⚕️'}
-        style={{ width:  190 }} // 2. Trava a largura do card
-      />
-            <LiquidFillCard
-        status="Consolidado"
-        title="Cardio"
-        progress={70}
-        icon={'❤️'}
-        style={{ width:  190 }} // 2. Trava a largura do card
-      />
-      
-      <LiquidFillCard
-        status="Em reforço"
-        title="Neurologia"
-        progress={65}
-        icon={'😁'}
-        style={{ width:  190 }} // 2. Trava a largura do card
-      />
+      ))}
+    
+        
+    
+    
+     
     </ScrollView>
   );
 };
