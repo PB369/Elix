@@ -129,8 +129,11 @@ const WaveSvg: FC<{
   );
 };
 
+
+
 // ── componente principal ──
 const LiquidFillCard: FC<LiquidFillCardProps> = ({
+
   title    = "Neurologia",
   icon,
   status   = "Consolidado",

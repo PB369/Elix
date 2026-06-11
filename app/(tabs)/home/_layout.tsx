@@ -6,6 +6,8 @@ export default function HomeStack() {
 
       <Stack.Screen name="index" />
       <Stack.Screen name="AddContent" />
+      <Stack.Screen name="CardData" />
+      
     </Stack>
   );
 }

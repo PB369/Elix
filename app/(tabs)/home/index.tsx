@@ -5,17 +5,18 @@ import UploadButton from "@/components/HomeScreenComponents/UploadButton";
 import YourContents from "@/components/HomeScreenComponents/YourContents";
 import { AntDesign } from "@expo/vector-icons";
 import { BottomSheetBackdrop, BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
+import { BlurView } from "expo-blur";
 import { router } from "expo-router";
-import React, { useCallback, useEffect, useMemo, useRef } from "react";
-import { Animated, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useMemo, useRef } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import '../../../global.css';
-
-
-
+import { getHomeData } from "../../services/homeService";
 
 export default function HomeScreen() {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(20)).current;
+
+   const { user, doseHoje, macrotemas } = getHomeData();
+
+   
 
   // 1. Ref para controlar o Bottom Sheet
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -26,48 +27,47 @@ export default function HomeScreen() {
     bottomSheetModalRef.current?.present();
   };
 
-  const renderBackdrop = useCallback(
+const renderBackdrop = useCallback(
     (props: any) => (
+      
       <BottomSheetBackdrop
         {...props}
-        disappearsOnIndex={-1} // Fica invisível quando o modal fecha
-        appearsOnIndex={0}     // Aparece assim que o modal abre no primeiro snap point
-        pressBehavior="close"  // Garante que o toque fechará o modal
-      />
+        disappearsOnIndex={-1} 
+        appearsOnIndex={0}     
+        pressBehavior="close"  
+      >
+      
+      </BottomSheetBackdrop>
     ),
     []
   );
 
 
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
+  const renderBackground = useCallback(
+  (props: any) => (
+    <BlurView
+      // O props.style é injetado pela biblioteca para posicionar o fundo
+      style={[props.style, { borderRadius: 24, overflow: 'hidden' }]}
+      tint="default"
+      intensity={50} // Ajuste a força do vidro
+    />
+  ),
+  []
+);
+
 
   return (
 
    
     <View className="flex-1 bg-[#080510]">
-        <Animated.View
-          style={{ flex: 1, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}
-        >
+       
         
           <Header/>
           <DoseCard onPress={() => {router.push("/(tabs)/home/Quiz")}} />
           <YourContents/>
-          <ContentCards/>
+          <ContentCards macrotemas={macrotemas}/>
       
-        </Animated.View>
+       
         <UploadButton onPress={handlePresentModalPress}/>
 
 
@@ -79,8 +79,9 @@ export default function HomeScreen() {
         ref={bottomSheetModalRef}
         index={0} // abre no primeiro ponto
         snapPoints={snapPoints}
+         backgroundComponent={renderBackground}
         backdropComponent={renderBackdrop}
-        backgroundStyle={{ backgroundColor: 'black' }}
+        
       >
         <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
             
@@ -109,3 +110,4 @@ export default function HomeScreen() {
     </View>
   );
 }
+

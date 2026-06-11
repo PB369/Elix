@@ -1,15 +1,29 @@
-import { ScrollView, useWindowDimensions } from "react-native";
+import { router } from "expo-router";
+import { ScrollView, TouchableOpacity, useWindowDimensions } from "react-native";
 import LiquidFillCard from "./LiquidFillCard";
-import json from "../../app/Data/data.json"
+
+type Macrotema = {
+  id: string;
+  nome: string;
+  status: string;
+  liquido_percentual: number;
+};
+
+type ContentCardsProps = {
+  macrotemas: Macrotema[];
+};
 
 
-console.log(json["macrotemas"])
-const json1 = json.macrotemas
-console.log(json1)
-
-const ContentCards = () => {
+const ContentCards = ({macrotemas}:ContentCardsProps) => {
 
    const { width } = useWindowDimensions();
+
+   const OnPress = (item) =>{
+    
+console.log("Clicou no card:", item.nome); // <-- Adicione isso aqui!
+    router.push("/(tabs)/home/CardData")
+   }
+
   return (
     <ScrollView
       horizontal // 1. Torna a rolagem horizontal
@@ -22,18 +36,29 @@ const ContentCards = () => {
       // (Opcional) Propriedades para um efeito de carrossel suave:
       decelerationRate="fast"
       snapToInterval={(width * 0.48) + 16} // Largura do card + gap
-      className="w-full h-full"
+      className="w-full"
     >
 
-    {json1.map((item) => (
+    {macrotemas.map((item) => (
         // Always include a unique 'key' for list items
-             <LiquidFillCard
-        status={item.status_consolidacao}
-        title={item.nome}
-        progress={50}
-        icon={'🧠'}
-        style={{ width: width * 0.48}} // 2. Trava a largura do card
-      />
+
+        <TouchableOpacity 
+          key={item.id} // A key vem para o elemento pai
+          onPress={() =>  OnPress(item)} // O onPress fica aqui
+          activeOpacity={0.8} // Deixa o clique um pouco mais suave
+        >
+
+          <LiquidFillCard
+  
+     status={item.status}
+     title={item.nome}
+     progress={item.liquido_percentual}
+     icon={'🧠'}
+     style={{ width: width * 0.48}} // 2. Trava a largura do card
+   />
+
+
+        </TouchableOpacity>
       
       ))}
     
