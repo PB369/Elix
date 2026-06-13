@@ -45,31 +45,32 @@ const QUESTIONS = [
   },
   {
     category: 'Neurociência Aplicada',
-    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
+    title: 'Qual neurotransmissor está centralmente envolvido no sistema de recompensa e na motivação?',
+    hint: 'Sua liberação gera a sensação de antecipação de um benefício ou prazer.',
     options: [
-      { id: 'a', label: 'Hipocampo' },
-      { id: 'b', label: 'Córtex Pré-frontal' },
-      { id: 'c', label: 'Amígdala' },
-      { id: 'd', label: 'Cerebelo' },
+      { id: 'a', label: 'Serotonina' },
+      { id: 'b', label: 'GABA' },
+      { id: 'c', label: 'Dopamina' },
+      { id: 'd', label: 'Acetilcolina' },
     ],
-    correctId: 'b',
+    correctId: 'c',
   },
   {
     category: 'Neurociência Aplicada',
-    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
+    title: 'A capacidade do cérebro de se reorganizar e formar novas conexões ao longo da vida é chamada de:',
+    hint: 'Pense na maleabilidade do tecido nervoso frente a novos aprendizados ou lesões.',
     options: [
-      { id: 'a', label: 'Amígdala' },
-      { id: 'b', label: 'Córtex Pré-frontal' },
-      { id: 'c', label: 'Cerebelo' },
-      { id: 'd', label: 'Hipocampo' },
+      { id: 'a', label: 'Neuroplasticidade' },
+      { id: 'b', label: 'Mielinização' },
+      { id: 'c', label: 'Homeostase sináptica' },
+      { id: 'd', label: 'Potenciação de Curto Prazo' },
     ],
-    correctId: 'b',
-  }
+    correctId: 'a',
+  },
 ];
 
 const amountOfQuestions = QUESTIONS.length;
+
 
 export default function QuizScreen() {
   const { width } = useWindowDimensions();
@@ -83,7 +84,8 @@ export default function QuizScreen() {
   const isLastQuestion = currentQuestionIndex === QUESTIONS.length - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
 
-  const progress = (currentQuestionIndex + 1) / amountOfQuestions;
+  const progress = currentQuestionIndex / amountOfQuestions;
+  const progressWidth = (width + 40 + 48 + 12) * progress;
 
   function handleSelect(id: string) {
     if (confirmed) return;
@@ -136,11 +138,46 @@ export default function QuizScreen() {
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
 
-      {/* ── Progress Bar ── */}
-      <View style={styles.progressBarWrapper}>
-        <View style={[styles.progressTrack, { width: width - 48 }]}>
-          <View style={[styles.progressFill, { width: (width - 48) * progress }]} />
+      <View className="flex-row items-center px-6 pt-4 pb-3 gap-3">
+        {/* ── Progress Bar ── */}
+        <View
+          className="flex-1 rounded-full overflow-hidden"
+          style={{ height: 10, backgroundColor: C.surfaceContainerHigh }}
+        >
+          <View
+            className="h-full rounded-full"
+            style={{
+              width: progressWidth,
+              backgroundColor: C.primaryContainer,
+            }}
+          />
         </View>
+        {/* Contador */}
+        <Text
+          style={{
+            fontFamily: 'Manrope_600SemiBold',
+            fontSize: 12,
+            color: C.onSurfaceVariant,
+            flexShrink: 0,
+          }}
+        >
+          {currentQuestionIndex + 1}/{QUESTIONS.length}
+        </Text>
+        {/* ── Exit Button ── */}
+        <TouchableOpacity
+            onPress={() => router.replace('/(tabs)/home')}
+            activeOpacity={0.7}
+            className="items-center justify-center"
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 18,
+              backgroundColor: C.surfaceContainerHigh,
+              flexShrink: 0,
+            }}
+          >
+            <Feather name="x" size={16} color={C.onSurfaceVariant} />
+        </TouchableOpacity>
       </View>
 
       {/* O segredo está aqui: o ScrollView ganha uma View servindo de container ao redor */}
