@@ -1,4 +1,4 @@
-import data from "../data/data.json"
+import data from "../Data/data.json";
 
 export function getMacrotemas() {
   return data.macrotemas.map((macrotema) => ({
@@ -11,9 +11,7 @@ export function getMacrotemas() {
 }
 
 export function getMacrotemaById(macrotemaId) {
-  return data.macrotemas.find(
-    (macrotema) => macrotema.id === macrotemaId
-  );
+  return data.macrotemas.find((macrotema) => macrotema.id === macrotemaId);
 }
 
 export function getTodasPerguntas() {
