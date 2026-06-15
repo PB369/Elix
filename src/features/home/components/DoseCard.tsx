@@ -47,7 +47,7 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
         style={{ padding: cardPadding }}
       >
         <Image
-          source={require('../../assets/images/complete.png')} 
+          source={require('@/assets/images/complete.png')} 
           style={{
             position: "absolute", // Tira do fluxo e flutua sobre o fundo
             right: -width * 0.1,  // Move um pouco para fora da borda direita

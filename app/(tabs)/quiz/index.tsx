@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
+// ─── Design Tokens 
 const C = {
   surface:                '#16111b',
   surfaceContainerLow:    '#1f1924',
@@ -29,7 +29,7 @@ const C = {
   correct:                '#00c896',
 };
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
+// ─── Mock data
 const QUESTIONS = [
   {
     category: 'Neurociência Aplicada',

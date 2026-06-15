@@ -1,13 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { usePathname } from "expo-router";
+import { useEffect } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
  
-// ─── Tab definitions ───────────────────────────────────────────────────────────
+// ─── Tab definitions 
  
 const TABS = [
   {
-    name: "home",
+    name: "home/index",
     label: "Início",
     icon: (focused: boolean) => (
       <Ionicons
@@ -52,14 +53,14 @@ const TABS = [
   // },
 ];
  
-// ─── Custom Tab Bar ────────────────────────────────────────────────────────────
+// ─── Custom Tab Bar
  
 function ElixTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   
   const pathname = usePathname();
 
   // Lista de rotas onde o tab bar deve sumir
-  const hiddenRoutes = ['/home/AddContent','/home/Quiz'];
+  const hiddenRoutes = ['/studyContents/addContent','/quiz'];
 
   if (hiddenRoutes.some(route => pathname.includes(route))) {
     return null;
@@ -92,7 +93,6 @@ function ElixTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
         {state.routes.map((route, index) => {
           const tab = TABS.find((t) => t.name === route.name);
           if (!tab) return null;
- 
           const focused = state.index === index;
           const { options } = descriptors[route.key];
  
