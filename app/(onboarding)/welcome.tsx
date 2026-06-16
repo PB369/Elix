@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import '@/global.css'
 
 export default function WelcomeScreen() {
   const elixPotionPath = require('@/assets/images/elix-potion.png')
@@ -13,7 +14,7 @@ export default function WelcomeScreen() {
   const router = useRouter()
 
   return (
-    <View className="flex-1 bg-[#16111b] items-center justify-center px-6 overflow-hidden">
+    <View className="flex-1 bg-[#16111b] items-center justify-center px-6 overflow-hidden" >
       <StatusBar barStyle="light-content" />
 
       {/* Main Content */}
@@ -53,7 +54,7 @@ export default function WelcomeScreen() {
         <View className="w-full mt-10 space-y-4">
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={()=>router.push('/signUp')}
+            onPress={()=>router.push('/(auth)/signUp')}
             className="w-full bg-[#8a2be2] py-4 rounded-full items-center"
             style={{
               shadowColor: "#8a2be2",
