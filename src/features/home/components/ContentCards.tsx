@@ -1,8 +1,13 @@
 import { ScrollView } from "react-native";
 import LiquidFillCard from "./LiquidFillCard";
+import { MacroTema } from "@/src/types/studyContent";
 
-const ContentCards = () => {
-  return (
+interface ContentCardsProps {
+  macroTemas?: MacroTema[];
+}
+
+const ContentCards = ({ macroTemas }: ContentCardsProps) => {
+  return macroTemas ? (
     <ScrollView
       horizontal // 1. Torna a rolagem horizontal
       showsHorizontalScrollIndicator={false} // Esconde a barra de rolagem
@@ -16,34 +21,18 @@ const ContentCards = () => {
       snapToInterval={190+ 16} // Largura do card + gap
       className="w-full h-full"
     >
-      <LiquidFillCard
-        title="Neurologia"
-        progress={15}
-        icon={'🧠'}
-        style={{ width: 190 }} // 2. Trava a largura do card
-      />
-      
-      <LiquidFillCard
-        title="Sistema Digestivo"
-        progress={20}
-        icon={'👩‍⚕️'}
-        style={{ width:  190 }} // 2. Trava a largura do card
-      />
-      <LiquidFillCard
-        title="Cardio"
-        progress={70}
-        icon={'❤️'}
-        style={{ width:  190 }} // 2. Trava a largura do card
-      />
-      
-      <LiquidFillCard
-        title="Neurologia"
-        progress={65}
-        icon={'😁'}
-        style={{ width:  190 }} // 2. Trava a largura do card
-      />
+
+        {macroTemas.map((macroTema) => (
+          <LiquidFillCard
+            key={macroTema.id}
+            title={macroTema.nome}
+            progress={0}
+            icon={'$'}
+            style={{ width: 190 }}
+          />
+        ))}
     </ScrollView>
-  );
+  ) : null;
 };
 
 export default ContentCards;

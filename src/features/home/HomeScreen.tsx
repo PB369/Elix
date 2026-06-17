@@ -12,8 +12,11 @@ import DoseCard from "./components/DoseCard";
 import YourContents from "./components/YourContents";
 import ContentCards from "./components/ContentCards";
 import UploadButton from "./components/UploadButton";
+import { StudyContentService } from "@/src/services/studyContent/studyContent.service";
+import { useStudyContentStore } from "@/src/store/studyContentStore";
 
 export default function HomeScreen() {
+  // Animação de fade-in e slide-up para os conteúdos da tela
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(20)).current;
 
@@ -26,6 +29,7 @@ export default function HomeScreen() {
     bottomSheetModalRef.current?.present();
   };
 
+  // Função para renderizar o backdrop do Bottom Sheet, garantindo que ele desapareça quando o modal fechar
   const renderBackdrop = useCallback(
     (props: any) => (
       <BottomSheetBackdrop
@@ -38,6 +42,7 @@ export default function HomeScreen() {
     [],
   );
 
+  // Inicia as animações de fade-in e slide-up quando a tela é montada
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -52,6 +57,13 @@ export default function HomeScreen() {
       }),
     ]).start();
   }, []);
+
+  // Carrega dados de StudyContent ao iniciar a tela
+  useEffect(() => {
+    StudyContentService.initialize();
+  }, []);
+
+  const studyContentData = useStudyContentStore((state) => state.data);
 
   return (
     <View className="flex-1 bg-[#080510]">
@@ -69,7 +81,7 @@ export default function HomeScreen() {
           }}
         />
         <YourContents />
-        <ContentCards />
+        <ContentCards macroTemas={studyContentData?.macrotemas} />
       </Animated.View>
       <UploadButton onPress={handlePresentModalPress} />
       {/* O BOTTOM SHEET EM SI */}
