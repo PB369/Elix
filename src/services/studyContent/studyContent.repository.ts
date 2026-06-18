@@ -3,6 +3,6 @@ import { StudyContentData } from "@/src/types/studyContent";
 
 export const StudyContentRepository = {
   async getAll(): Promise<StudyContentData> {
-    return studyContentMock;
+    return studyContentMock as StudyContentData;
   },
 };

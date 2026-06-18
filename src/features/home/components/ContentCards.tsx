@@ -21,7 +21,6 @@ const ContentCards = ({ macroTemas }: ContentCardsProps) => {
       snapToInterval={190+ 16} // Largura do card + gap
       className="w-full h-full"
     >
-
         {macroTemas.map((macroTema) => (
           <LiquidFillCard
             key={macroTema.id}
