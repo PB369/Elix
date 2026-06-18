@@ -8,7 +8,7 @@ export default function CardData() {
   
   return (
     <>
-    <View style={{flex:1, justifyContent:"center"}}>
+    <View className="flex-1 justify-center bg-[#080510]">
 
 
     <Button onPressIn={()=> router.back()}>Back</Button>
