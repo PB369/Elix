@@ -116,13 +116,18 @@ const WaveSvg: FC<{
   }, [W, H]); // W e H no array — o loop recria se o layout mudar
 
   return (
-    <Svg width={W} height={H} style={StyleSheet.absoluteFill}>
+    <Svg  opacity={1}width={W} height={H} style={StyleSheet.absoluteFill}>
       <Defs>
         <LinearGradient id="lg" x1="0" y1="1" x2="0" y2="0">
+{/* 
+             <Stop offset="0"   stopColor="#080510" stopOpacity="1" />           
+             <Stop offset="0.55" stopColor="#8b5cf6" stopOpacity="1" />           
+             <Stop offset="1"   stopColor="#5b21b6" stopOpacity="1" /> */}
           <Stop offset="0"   stopColor="#c494ff" stopOpacity="1" />
           <Stop offset="0.5" stopColor="#8b5cf6" stopOpacity="1" />
           <Stop offset="1"   stopColor="#5b21b6" stopOpacity="1" />
         </LinearGradient>
+
       </Defs>
       <Path ref={pathRef} fill="url(#lg)" />
     </Svg>
