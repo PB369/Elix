@@ -1,6 +1,7 @@
-import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons"
+import { Feather, FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons"
 import { Image, View } from "react-native"
 import StatBadge from "./StatBadge"
+import { Text } from "react-native-gesture-handler"
 
 const Header = ()=>{
     return (
@@ -33,7 +34,7 @@ const Header = ()=>{
                     value="14d"
                 />
                 {/* Google Drive Bagde */}
-                {/* <View
+                <View
                     className="flex-row items-center px-2 py-1.5 rounded-full border border-white/10"
                     style={{ backgroundColor: "rgba(255,255,255,0.07)" }}
                 >
@@ -44,7 +45,7 @@ const Header = ()=>{
                     >
                     <Feather name="check" size={8} color="white" />
                     </View>
-                </View> */}
+                </View>
             </View>
         </View>
     )

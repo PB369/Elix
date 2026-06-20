@@ -1,6 +1,6 @@
 
 
-import data from "../Data/data.json";
+import data from "../data/data.json";
 
 export function getMacrotemas() {
   return data.macrotemas.map((macrotema) => ({

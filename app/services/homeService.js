@@ -1,4 +1,4 @@
-import mockHomeData from "../Data/mockHomeData.json";
+import mockHomeData from "../data/mockHomeData.json";
 
 export function getHomeData() {
   return {

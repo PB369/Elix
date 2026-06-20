@@ -3,8 +3,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Sparkles } from 'lucide-react-native';
 import { useEffect, useRef } from "react";
 import { Image, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
-import Animated from "react-native-reanimated";
-import { AnimatedGradientBg } from "./AnimatedGradientBg";
 
 
 
@@ -128,9 +126,12 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
                     shadowColor: '#8a2be2',
                     shadowOffset: { width: 0, height: 10 },
                     shadowRadius: 30,
+                    shadowOpacity: 0.2,
+                  
                     elevation:  10 
                 }}
                 >
+                
                 <Text
                     className="font-bold text-lg"
                     style={{ color:  '#eed9ff' }}
