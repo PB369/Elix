@@ -1,4 +1,4 @@
-import ElixTabBar from "@/components/TabBar";
+import ElixTabBar from "@/components/GlobalComponents/TabBar";
 import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
