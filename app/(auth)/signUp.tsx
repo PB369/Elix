@@ -110,11 +110,11 @@ export default function OnboardingScreen() {
         primeiroAcesso: false,
       });
       router.replace({
-        pathname: '/loadingScreen',
+        pathname: "/loadingScreen",
         params: {
-          next: '/(tabs)/home',
-          title: 'Aguarde um momento...',
-          subtitle: 'Estamos preparando sua nova jornada de estudos'
+          next: "/home",
+          title: "Aguarde um momento...",
+          subtitle: "Estamos preparando sua nova jornada de estudos!"
         }
       })
     }

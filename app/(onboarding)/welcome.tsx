@@ -7,22 +7,26 @@ import {
   View,
 } from "react-native";
 import '@/global.css'
+import { StudyContentService } from '@/src/services/studyContent/studyContent.service';
+import { UserService } from '@/src/services/user/user.service';
 
 export default function WelcomeScreen() {
   const elixPotionPath = require('@/assets/images/elix-potion.png')
   const elixLogoPath = require('@/assets/images/elix-logo.png')
   const router = useRouter()
 
-  function handleAccessBtns(accessType: 'signUp' | 'signIn') {
+  async function handleAccessBtns(accessType: 'signUp' | 'signIn') {
     if(accessType === 'signUp') {
       router.push('/(auth)/signUp')
     } else {
+      await UserService.initialize()
+      await StudyContentService.initialize()
       router.replace({
-        pathname: '/loadingScreen',
+        pathname: "/loadingScreen",
         params: {
-          next: '/(tabs)/home',
-          title: 'Aguarde um momento...',
-          subtitle: 'Estamos carregando suas informações'
+          next: "/home",
+          title: "Aguarde um momento...",
+          subtitle: "Estamos carregando suas informações."
         }
       })
     }

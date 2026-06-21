@@ -11,15 +11,26 @@ type LoadingParams = {
   subtitle?: string
 }
 
-export default function LoadingScreen() {
+type Props = {
+  next?: string
+  title?: string
+  subtitle?: string
+}
+
+export default function LoadingScreen({ next, title, subtitle }: Props) {
   const fillAnimation = useRef(new Animated.Value(0)).current;
   const router = useRouter();
-  const { next, title, subtitle } = useLocalSearchParams<LoadingParams>();
-
-  const safeNext =
-  Array.isArray(next) ? next[0] : next
+  const params = useLocalSearchParams<LoadingParams>()
+  
+  const finalNext = next ?? (params.next as string) ?? "/home"
+  const finalTitle = title ?? (params.title as string) ?? "Carregando..."
+  const finalSubtitle = subtitle ?? (params.subtitle as string) ?? "Aguarde um momento..."
+  
+  const shouldNavigate = !!finalNext
 
   useEffect(() => {
+    if(!shouldNavigate) return;
+
     Animated.timing(fillAnimation, {
       toValue: 0.9,
       duration: 3500,
@@ -34,12 +45,12 @@ export default function LoadingScreen() {
       }).start()
 
       setTimeout(() => {
-        router.replace(safeNext as RelativePathString)
+        router.replace(finalNext as RelativePathString)
       }, 900)
     }, 3500)
 
     return () => clearTimeout(timer)
-  }, []);
+  }, [shouldNavigate]);
 
   const bgScaleY = fillAnimation;
   const bgTranslateY = fillAnimation.interpolate({
@@ -92,14 +103,14 @@ export default function LoadingScreen() {
           className="text-center text-[2.2rem] font-bold tracking-[-0.02em] text-[#eed9ff]"
           style={{ fontFamily: 'Manrope'}}
         >
-          {title}
+          {finalTitle}
         </Text>
 
         <Text 
           className="mt-4 text-base text-[#cfc2d7]"
           style={{ fontFamily: 'Manrope' }}
         >
-          {subtitle}
+          {finalSubtitle}
         </Text>
 
       </View>

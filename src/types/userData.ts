@@ -4,4 +4,5 @@ export interface UserData {
   primeiroAcesso: boolean;
   curso: string;
   semestre: number;
+  fezUpload: boolean;
 }
