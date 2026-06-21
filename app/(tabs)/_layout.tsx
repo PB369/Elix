@@ -14,14 +14,14 @@ export default function TabsLayout() {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="home/index"
         options={{
           title: "Home",
         }}
       />
 
       <Tabs.Screen
-        name="quiz"
+        name="quiz/index"
         options={{
           href: null, // esconde da tab bar
         }}

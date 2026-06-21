@@ -13,6 +13,21 @@ export default function WelcomeScreen() {
   const elixLogoPath = require('@/assets/images/elix-logo.png')
   const router = useRouter()
 
+  function handleAccessBtns(accessType: 'signUp' | 'signIn') {
+    if(accessType === 'signUp') {
+      router.push('/(auth)/signUp')
+    } else {
+      router.replace({
+        pathname: '/loadingScreen',
+        params: {
+          next: '/(tabs)/home',
+          title: 'Aguarde um momento...',
+          subtitle: 'Estamos carregando suas informações'
+        }
+      })
+    }
+  }
+
   return (
     <View className="flex-1 bg-[#16111b] items-center justify-center px-6 overflow-hidden" >
       <StatusBar barStyle="light-content" />
@@ -54,7 +69,7 @@ export default function WelcomeScreen() {
         <View className="w-full mt-10 space-y-4">
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={()=>router.push('/(auth)/signUp')}
+            onPress={() => handleAccessBtns('signUp')}
             className="w-full bg-[#8a2be2] py-4 rounded-full items-center"
             style={{
               shadowColor: "#8a2be2",
@@ -75,7 +90,7 @@ export default function WelcomeScreen() {
           <TouchableOpacity
             activeOpacity={0.7}
             className="w-full py-3 items-center"
-            onPress={()=>router.replace('/(tabs)/home')}
+            onPress={() => handleAccessBtns('signIn')}
           >
             <Text className="text-[#dcb8ff] text-base font-medium">
               Já tenho uma conta

@@ -109,7 +109,14 @@ export default function OnboardingScreen() {
         semestre: Number(semester),
         primeiroAcesso: false,
       });
-      router.replace('/(tabs)/home');
+      router.replace({
+        pathname: '/loadingScreen',
+        params: {
+          next: '/(tabs)/home',
+          title: 'Aguarde um momento...',
+          subtitle: 'Estamos preparando sua nova jornada de estudos'
+        }
+      })
     }
 
     return (
