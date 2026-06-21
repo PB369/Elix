@@ -14,10 +14,11 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as DocumentPicker from 'expo-document-picker';
+import { UserService } from '@/src/services/user/user.service';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
+// ─── Design Tokens 
 const C = {
   surface:                '#16111b',
   surfaceContainerLowest: '#110c16',
@@ -54,15 +55,18 @@ export default function AddContent() {
   }
 
   async function handleGenerate() {
-    // chama sua API aqui
-    // const questions = await generateQuestions(description);
-    
-  //   router.push({
-  //     pathname: '/home/QuizScreen',
-  //     params: { questions: JSON.stringify(questions) }
-  //   });
-  // }
-  console.log("Chama a api")
+    // await uploadFiles(files);
+    await UserService.updateUser({
+      fezUpload: true,
+    });
+    router.replace({
+      pathname: "/loadingScreen",
+      params: {
+        next: "/home",
+        title: "Processando materiais...",
+        subtitle: "Estamos elaborando sua poção de revisão e estudo!"
+      }
+    })
   }
 
   async function handlePickFile() {
@@ -234,7 +238,7 @@ export default function AddContent() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// ─── Styles 
 const styles = StyleSheet.create({
   safe: {
     flex: 1,

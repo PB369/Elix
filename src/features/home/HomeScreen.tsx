@@ -136,8 +136,11 @@ export default function HomeScreen() {
         }}
       >
         <Header />
-        <View>
-          <Text>Faça o upload dos seus materiais de estudo e comece a sua jornada de revisão personalizada!</Text>
+        <View className="flex-1 justify-center items-center px-8">
+          <Text className="text-lg font-semibold text-center text-[#d3a0fc]" style={{ marginTop: "-50%" }}>
+            Faça o upload dos seus materiais de estudo e comece a sua jornada de revisão personalizada!
+          </Text>
+          <View className="h-[100]"/>
         </View>
       </Animated.View>
       <UploadButton onPress={handlePresentModalPress} />
