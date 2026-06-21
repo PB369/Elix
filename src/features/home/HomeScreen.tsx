@@ -14,6 +14,7 @@ import ContentCards from "./components/ContentCards";
 import UploadButton from "./components/UploadButton";
 import { StudyContentService } from "@/src/services/studyContent/studyContent.service";
 import { useStudyContentStore } from "@/src/store/studyContentStore";
+import { useUserDataStore } from "@/src/store/userDataStore";
 
 export default function HomeScreen() {
   // Animação de fade-in e slide-up para os conteúdos da tela
