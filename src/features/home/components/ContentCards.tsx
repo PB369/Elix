@@ -25,8 +25,8 @@ const ContentCards = ({ macroTemas }: ContentCardsProps) => {
           <LiquidFillCard
             key={macroTema.id}
             title={macroTema.nome}
-            progress={0}
-            icon={'$'}
+            progress={5}
+            icon={macroTema.emoji}
             style={{ width: 190 }}
           />
         ))}

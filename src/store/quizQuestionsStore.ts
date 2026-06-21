@@ -21,7 +21,14 @@ export const useQuizQuestionsStore =
   create<QuizQuestionsStore>((set) => ({
     data: null,
 
-    setData: (data) => set({ data }),
+    setData: (data) =>
+      set((state) => {
+        if (state.data === data) {
+          return state;
+        }
+
+        return { data };
+    }),
 
     addQuestion: (question) =>
       set((state) => ({

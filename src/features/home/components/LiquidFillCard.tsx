@@ -238,9 +238,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   iconBox: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
+    width: 54,
+    height: 54,
+    borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.08)",
@@ -253,12 +253,13 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
   },
   iconEmoji: {
-    fontSize: 30,
+    fontSize: 25,
   },
   title: {
     fontSize: 16,
     fontWeight: "700",
     color: "#fff",
+    textAlign: "center",
     letterSpacing: -0.3,
     textShadowColor: "rgba(0,0,0,0.6)",
     textShadowOffset: { width: 0, height: 1 },

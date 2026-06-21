@@ -79,6 +79,8 @@ export interface MacroTema {
 
   nome: string;
 
+  emoji: string;
+
   status: Status;
 
   subtemas_ativos: number;

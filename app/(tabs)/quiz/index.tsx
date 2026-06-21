@@ -33,15 +33,19 @@ const C = {
 
 
 export default function QuizScreen() {
-  // ─── Mock data
+  // ─── Mock data (este código está comentado porque agora os dados vêm do store e ele causa loop infinito de renderização)
   useEffect(() => {
+    console.log("INITIALIZE");
     QuizQuestionsService.initialize();
   }, []);
   
+  const quizData =
+  useQuizQuestionsStore(
+    (state) => state.data
+  );
+
   const quizQuestions =
-    useQuizQuestionsStore(
-      (state) => state.data ? state.data.questoes : []
-    );
+    quizData?.questoes ?? [];
   
   const amountOfQuestions = quizQuestions.length;
 
@@ -52,11 +56,13 @@ export default function QuizScreen() {
   const [confirmed, setConfirmed] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  // const currentQuestion = QUESTIONS[currentQuestionIndex];
+  const currentQuestion = quizQuestions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === quizQuestions.length - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
 
-  const progress = currentQuestionIndex / amountOfQuestions;
+  const progress = amountOfQuestions > 0
+    ? currentQuestionIndex / amountOfQuestions
+    : 0;
   const progressWidth = (width + 40 + 48 + 12) * progress;
 
   function handleSelect(id: string) {
@@ -89,22 +95,31 @@ export default function QuizScreen() {
       goToQuestion(currentQuestionIndex - 1);
       return;
     }
-
     router.back();
   }
 
   function getOptionStyle(id: string) {
     if (!confirmed) return styles.optionDefault; // ← era !selected
-    if (id === quizQuestions[currentQuestionIndex].id_gabarito) return styles.optionCorrect;
-    if (id === selected && selected !== quizQuestions[currentQuestionIndex].id_gabarito) return styles.optionWrong;
+    if (id === currentQuestion.id_gabarito) return styles.optionCorrect;
+    if (id === selected && selected !== currentQuestion.id_gabarito) return styles.optionWrong;
     return styles.optionDefault;
   }
 
   function getOptionTextStyle(id: string) {
     if (!confirmed) return styles.optionText; // ← era !selected
-    if (id === quizQuestions[currentQuestionIndex].id_gabarito) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
-    if (id === selected && selected !== quizQuestions[currentQuestionIndex].id_gabarito) return [styles.optionText, { color: '#ff6b6b' }];
+    if (id === currentQuestion.id_gabarito) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
+    if (id === selected && selected !== currentQuestion.id_gabarito) return [styles.optionText, { color: '#ff6b6b' }];
     return styles.optionText;
+  }
+
+  if(!currentQuestion) {
+    return (
+      <SafeAreaView style={styles.safe} edges={['top', 'bottom']} className='justify-center items-center'>
+        <Text style={{ color: C.onSurfaceVariant, fontFamily: 'Manrope_500Medium' }}>
+          Carregando perguntas...
+        </Text>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -160,18 +175,18 @@ export default function QuizScreen() {
         >
           {/* ── Category chip ── */}
           <View style={styles.chip}>
-            <Text style={styles.chipText}>{quizQuestions[currentQuestionIndex].categoria.toUpperCase()}</Text>
+            <Text style={styles.chipText}>{currentQuestion.categoria.toUpperCase()}</Text>
           </View>
 
           {/* ── Question ── */}
-          <Text style={styles.question}>{quizQuestions[currentQuestionIndex].titulo}</Text>
+          <Text style={styles.question}>{currentQuestion.titulo}</Text>
 
           {/* ── Hint ── */}
-          <Text style={styles.hint}>{quizQuestions[currentQuestionIndex].dica}</Text>
+          <Text style={styles.hint}>{currentQuestion.dica}</Text>
 
           {/* ── Options ── */}
           <View style={styles.optionsList}>
-            {quizQuestions[currentQuestionIndex].opcoes.map((opt) => (
+            {currentQuestion.opcoes.map((opt) => (
               <TouchableOpacity
                 key={opt.id}
                 onPress={() => handleSelect(opt.id)}
@@ -188,17 +203,17 @@ export default function QuizScreen() {
       )}
     </View>
   )}
-  {confirmed && opt.id === quizQuestions[currentQuestionIndex].id_gabarito && (
+  {confirmed && opt.id === currentQuestion.id_gabarito && (
     <View style={[styles.radioOuter, { borderColor: C.correct, backgroundColor: C.correct }]}>
       <Feather name="check" size={12} color="#fff" />
     </View>
   )}
-  {confirmed && opt.id === selected && selected !== quizQuestions[currentQuestionIndex].id_gabarito && (
+  {confirmed && opt.id === selected && selected !== currentQuestion.id_gabarito && (
     <View style={[styles.radioOuter, { borderColor: '#ff6b6b', backgroundColor: '#ff6b6b' }]}>
       <Feather name="x" size={12} color="#fff" />
     </View>
   )}
-  {confirmed && opt.id !== quizQuestions[currentQuestionIndex].id_gabarito && opt.id !== selected && (
+  {confirmed && opt.id !== currentQuestion.id_gabarito && opt.id !== selected && (
     <View style={styles.radioOuter} />
   )}
           </TouchableOpacity>

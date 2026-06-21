@@ -3,6 +3,7 @@
     {
       "id": "macro_tema_001",
       "nome": "Endocrinologia",
+      "emoji": "💉",
       "status": "em_reforco",
       "subtemas_ativos": 3,
       "subtemas": [
@@ -189,6 +190,7 @@
     {
       "id": "macro_tema_002",
       "nome": "Neurofisiologia",
+      "emoji": "🧠",
       "status": "consolidando",
       "subtemas_ativos": 2,
       "subtemas": [
@@ -301,6 +303,7 @@
     {
       "id": "macro_tema_003",
       "nome": "Anatomia musculoesquelética",
+      "emoji": "🦴",
       "status": "comecando",
       "subtemas_ativos": 2,
       "subtemas": [
