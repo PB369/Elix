@@ -3,33 +3,17 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useEffect, useRef } from "react";
 import { Image, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { Sparkles } from 'lucide-react-native';
-import Animated from "react-native-reanimated";
+import { useQuizQuestionsStore } from "@/src/store/quizQuestionsStore";
 
 const DoseCard = ({ onPress }: { onPress: () => void }) => {
-  // const shimmer = useRef(new Animated.Value(0)).current;
+  const quizData = useQuizQuestionsStore((state) => state.data);
+
   const { width } = useWindowDimensions();
 
   const titleSize = width * 0.065;
   const subtitleSize = width * 0.035;
   const iconBoxSize = width * 0.13;
   const cardPadding = width * 0.055;
-  // const phoneWidth = width * 0.13;
-  // const phoneHeight = width * 0.2;
-  // const illustrationSize = width * 0.28;
-
-  // useEffect(() => {
-  //   Animated.loop(
-  //     Animated.sequence([
-  //       Animated.timing(shimmer, { toValue: 1, duration: 2200, useNativeDriver: true }),
-  //       Animated.timing(shimmer, { toValue: 0, duration: 2200, useNativeDriver: true }),
-  //     ])
-  //   ).start();
-  // }, [shimmer]);
-
-  // const glowOpacity = shimmer.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: [0.4, 0.9],
-  // });
 
   return (
     <View
@@ -100,67 +84,13 @@ const DoseCard = ({ onPress }: { onPress: () => void }) => {
               <Text style={{ color: "#7c3aed" }}>você estudou</Text>
             </Text>
           </View>
-
-          {/* Phone illustration */}
-          {/* <Animated.View style={{ opacity: glowOpacity }}>
-            <View
-              className="items-center justify-center"
-              style={{ width: illustrationSize, height: illustrationSize }}
-            > */}
-              {/* Glow platform */}
-              {/* <View
-                style={{
-                  position: "absolute",
-                  bottom: 0,
-                  width: illustrationSize * 0.75,
-                  height: illustrationSize * 0.18,
-                  borderRadius: 999,
-                  backgroundColor: "#7c3aed",
-                  opacity: 0.5,
-                  shadowColor: "#7c3aed",
-                  shadowRadius: 20,
-                  shadowOpacity: 1,
-                  shadowOffset: { width: 0, height: 0 },
-                }}
-              /> */}
-              {/* Phone frame */}
-              {/* <View
-                className="items-center justify-center"
-                style={{
-                  width: phoneWidth,
-                  height: phoneHeight,
-                  borderRadius: phoneWidth * 0.28,
-                  borderWidth: 2,
-                  borderColor: "rgba(167,139,250,0.6)",
-                  backgroundColor: "rgba(109,40,217,0.25)",
-                  shadowColor: "#7c3aed",
-                  shadowRadius: 12,
-                  shadowOpacity: 0.8,
-                  shadowOffset: { width: 0, height: 0 },
-                }}
-              >
-                <View
-                  className="items-center justify-center"
-                  style={{
-                    width: phoneWidth * 0.55,
-                    height: phoneWidth * 0.55,
-                    borderRadius: phoneWidth * 0.275,
-                    borderWidth: 2,
-                    borderColor: "rgba(167,139,250,0.9)",
-                  }}
-                >
-                  <Feather name="check" size={phoneWidth * 0.28} color="#a78bfa" />
-                </View>
-              </View>
-            </View>
-          </Animated.View> */}
         </View>
 
         {/* Divider info */}
         <View className="flex-row items-center" style={{ marginBottom: cardPadding }}>
           <Feather name="clock" size={subtitleSize * 1.1} color="rgba(255,255,255,0.4)" />
           <Text className="text-white/40" style={{ fontSize: subtitleSize, marginLeft: 6 }}>
-            5 perguntas
+            {useQuizQuestionsStore((state) => state.data?.questoes.length || 0)} perguntas
             <Text className="text-white/25">{"  |  "}Revisão rápida</Text>
           </Text>
         </View>

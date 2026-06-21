@@ -1,8 +1,11 @@
 import { FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icons"
 import { Image, View } from "react-native"
 import StatBadge from "./StatBadge"
+import { useUserDataStore } from "@/src/store/userDataStore";
 
 const Header = ()=>{
+    const userData = useUserDataStore((state) => state.data);
+
     return (
         <View className="flex-row items-center justify-between w-full px-6 pt-12 pb-6">
             {/* Logo */}
@@ -20,7 +23,7 @@ const Header = ()=>{
                     icon={
                     <FontAwesome6 name="droplet" size={12} color="#a78bfa" />
                     }
-                    value="250"
+                    value={String(userData?.pontuacao)}
                 />
                 <StatBadge
                     icon={
@@ -30,7 +33,7 @@ const Header = ()=>{
                         color="#f97316"
                     />
                     }
-                    value="14d"
+                    value={String(userData?.streak)}
                 />
                 {/* Google Drive Bagde */}
                 {/* <View

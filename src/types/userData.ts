@@ -5,4 +5,6 @@ export interface UserData {
   curso: string;
   semestre: number;
   fezUpload: boolean;
+  pontuacao: number;
+  streak: number;
 }

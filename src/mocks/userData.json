@@ -4,5 +4,7 @@
   "primeiroAcesso": true,
   "curso": "",
   "semestre": 0,
-  "fezUpload": false
+  "fezUpload": false,
+  "pontuacao": 0,
+  "streak": 0
 }

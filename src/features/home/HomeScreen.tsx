@@ -66,7 +66,7 @@ export default function HomeScreen() {
   const userData = useUserDataStore((state) => state.data);
 
   return userData?.fezUpload ? (
-      <View className="flex-1 bg-[#080510]">
+    <View className="flex-1 bg-[#080510]">
         <Animated.View
           style={{
             flex: 1,
