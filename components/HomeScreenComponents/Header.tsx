@@ -2,8 +2,15 @@ import { Feather, FontAwesome6, MaterialCommunityIcons } from "@expo/vector-icon
 import { Image, View } from "react-native"
 import StatBadge from "./StatBadge"
 import { Text } from "react-native-gesture-handler"
+import { router } from "expo-router"
 
 const Header = ()=>{
+
+    const openNotionConnect = () =>{
+        router.push("/(tabs)/home/NotionScreen")
+
+
+    }
     return (
         <View className="flex-row items-center justify-between w-full px-6 pt-12 pb-6">
             {/* Logo */}
@@ -19,33 +26,44 @@ const Header = ()=>{
             <View className="flex-row items-center">
                 <StatBadge
                     icon={
-                    <FontAwesome6 name="droplet" size={12} color="#a78bfa" />
+                    <FontAwesome6 name="droplet" size={14} color="#a78bfa" />
                     }
-                    value="250"
+                    value="2000"
                 />
                 <StatBadge
                     icon={
                     <MaterialCommunityIcons
                         name="fire"
-                        size={18}
+                        size={20}
                         color="#f97316"
                     />
                     }
-                    value="14d"
+                    value="14"
                 />
-                {/* Google Drive Bagde */}
-                <View
-                    className="flex-row items-center px-2 py-1.5 rounded-full border border-white/10"
-                    style={{ backgroundColor: "rgba(255,255,255,0.07)" }}
-                >
-                    <Text className="text-xs mr-1">🌈</Text>
+                <StatBadge
+                OnPress={openNotionConnect}
+                icon={
+
+                     <Image 
+                    source={require('@/assets/images/icon-notion.png')} 
+                    className="w-7 h-7"
+                    
+                />
+            
+                }
+                value=""
+                
+                
+                />
+                
                     <View
-                    className="w-3.5 h-3.5 rounded-full items-center justify-center"
+                    className="absolute top-0 right-0  w-4 h-4 rounded-full items-center justify-center"
                     style={{ backgroundColor: "#22c55e" }}
                     >
                     <Feather name="check" size={8} color="white" />
-                    </View>
-                </View>
+                    </View>               
+                  
+              
             </View>
         </View>
     )
