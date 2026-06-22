@@ -201,7 +201,7 @@ export default function OnboardingScreen() {
                 <TouchableOpacity
                 activeOpacity={0.85}
                 disabled={!course || !semester}
-                onPress={()=>router.replace('/(tabs)/home')}
+                onPress={()=>router.push('/AddSubject')}
                 className="w-full flex-row items-center justify-center gap-x-3 py-5 rounded-lg"
                 style={{
                     backgroundColor: course && semester ? '#8a2be2' : '#39323d',
