@@ -3,6 +3,8 @@ import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useRef } from "react";
 import { Animated, TouchableOpacity, View } from "react-native";
+import * as Haptics from 'expo-haptics';
+
 
 interface UploadButtonProps {
   onPress: () => void;
@@ -15,6 +17,7 @@ const UploadButton = ({ onPress }: UploadButtonProps) => {
   const glowAnim  = useRef(new Animated.Value(0)).current;  // ← adicione esta linha
 
   const handlePress = () => {
+           Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
     Animated.sequence([
       Animated.spring(scaleAnim, {
         toValue: 1.2,
@@ -31,6 +34,8 @@ const UploadButton = ({ onPress }: UploadButtonProps) => {
     ]).start();
     onPress();
   };
+
+
 
 
   useEffect(() => {

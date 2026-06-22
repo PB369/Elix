@@ -1,10 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { usePathname } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
- 
+import { Text, TouchableOpacity, Vibration, View } from "react-native";
 // ─── Tab definitions ───────────────────────────────────────────────────────────
- 
+import * as Haptics from 'expo-haptics';
 const TABS = [
   {
     name: "home",
@@ -59,7 +58,7 @@ function ElixTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
   const pathname = usePathname();
 
   // Lista de rotas onde o tab bar deve sumir
-  const hiddenRoutes = ['/home/AddContent','/home/Quiz'];
+  const hiddenRoutes = ['/home/AddContent','/home/Quiz', "/home/NotionScreen"];
 
   if (hiddenRoutes.some(route => pathname.includes(route))) {
     return null;
@@ -97,6 +96,7 @@ function ElixTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
           const { options } = descriptors[route.key];
  
           const onPress = () => {
+             Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)
             const event = navigation.emit({
               type: "tabPress",
               target: route.key,
