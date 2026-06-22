@@ -12,13 +12,13 @@
     },
     {
       "id": "macro_002",
-      "nome": "Neurofisiologia",
+      "nome": "Cardiologia",
       "status": "Consolidando",
       "liquido_percentual": 72
     },
     {
       "id": "macro_003",
-      "nome": "Anatomia muscular",
+      "nome": "Farmacologia",
       "status": "Começando",
       "liquido_percentual": 24
     }
