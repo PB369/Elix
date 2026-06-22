@@ -3,6 +3,7 @@ export interface UserData {
   nome: string;
   primeiroAcesso: boolean;
   curso: string;
+  disciplinas: string[];
   semestre: number;
   fezUpload: boolean;
   pontuacao: number;

@@ -101,22 +101,14 @@ function SelectPicker({ placeholder, options, value, onChange, icon }: SelectPic
 export default function OnboardingScreen() {
     const [course, setCourse] = useState('')
     const [semester, setSemester] = useState('')
-    const router = useRouter()
+    const router = useRouter();
 
-    function handleFinishSetup() {
+    function handleNext() {
       UserService.updateUser({
         curso: course,
-        semestre: Number(semester),
-        primeiroAcesso: false,
+        semestre: Number(semester)
       });
-      router.replace({
-        pathname: "/loadingScreen",
-        params: {
-          next: "/home",
-          title: "Aguarde um momento...",
-          subtitle: "Estamos preparando sua nova jornada de estudos!"
-        }
-      })
+      router.replace("/addSubjects")
     }
 
     return (
@@ -219,7 +211,7 @@ export default function OnboardingScreen() {
                 <TouchableOpacity
                 activeOpacity={0.85}
                 disabled={!course || !semester}
-                onPress={handleFinishSetup}
+                onPress={handleNext}
                 className="w-full flex-row items-center justify-center gap-x-3 py-5 rounded-lg"
                 style={{
                     backgroundColor: course && semester ? '#8a2be2' : '#39323d',
@@ -234,7 +226,7 @@ export default function OnboardingScreen() {
                     className="font-bold text-lg"
                     style={{ color: course && semester ? '#eed9ff' : '#988ca0' }}
                 >
-                    Finalizar Setup
+                    Próximo
                 </Text>
                 <MaterialIcons
                     name="arrow-forward"

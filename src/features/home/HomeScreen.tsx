@@ -81,8 +81,7 @@ export default function HomeScreen() {
               pathname: '/loadingScreen',
               params: {
                 next: '/quiz',
-                title: 'Aguarde um momento...',
-                subtitle: 'Estamos preparando sua dose de revisão personalizada.'
+                title: 'Preparando sua revisão...',
               }
             })
           }}

@@ -25,8 +25,7 @@ export default function WelcomeScreen() {
         pathname: "/loadingScreen",
         params: {
           next: "/home",
-          title: "Aguarde um momento...",
-          subtitle: "Estamos carregando suas informações."
+          title: "Aguarde um momento..."
         }
       })
     }

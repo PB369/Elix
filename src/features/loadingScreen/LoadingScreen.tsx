@@ -1,7 +1,8 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated, Dimensions, Easing } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, Animated, Dimensions, Easing } from 'react-native';
+import { FlaskConical } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useRouter, useLocalSearchParams, RelativePathString } from 'expo-router';
+import { useRouter, router, useLocalSearchParams, RelativePathString } from 'expo-router';
 const { height } = Dimensions.get('window');
 const TUBE_HEIGHT = 80; 
 
@@ -17,36 +18,45 @@ type Props = {
   subtitle?: string
 }
 
+
 export default function LoadingScreen({ next, title, subtitle }: Props) {
   const fillAnimation = useRef(new Animated.Value(0)).current;
   const router = useRouter();
-  const params = useLocalSearchParams<LoadingParams>()
+  const params = useLocalSearchParams<LoadingParams>();
+  const [percentage, setPercentage] = useState('0%');
+  
   
   const finalNext = next ?? (params.next as string) ?? "/home"
-  const finalTitle = title ?? (params.title as string) ?? "Carregando..."
-  const finalSubtitle = subtitle ?? (params.subtitle as string) ?? "Aguarde um momento..."
+  const finalTitle = title ?? (params.title as string) ?? ""
+  const finalSubtitle = subtitle ?? (params.subtitle as string) ?? ""
   
   const shouldNavigate = !!finalNext
 
   useEffect(() => {
     if(!shouldNavigate) return;
 
+    const listenerId = fillAnimation.addListener(({ value }) => {
+      setPercentage(`${Math.round(value * 100)}%`);
+    });
+
     Animated.timing(fillAnimation, {
       toValue: 0.9,
-      duration: 3500,
+      duration: 10000,
+      easing: Easing.out(Easing.cubic),
       useNativeDriver: true,
-    }).start()
+    }).start();
 
     const timer = setTimeout(() => {
       Animated.timing(fillAnimation, {
         toValue: 1,
-        duration: 800,
+        duration: 2000,
         useNativeDriver: true,
-      }).start()
+      }).start();
 
+      // Estabelece delay para navegação após a animação de preenchimento finalizar
       setTimeout(() => {
         router.replace(finalNext as RelativePathString)
-      }, 900)
+      }, 2500)
     }, 3500)
 
     return () => clearTimeout(timer)
@@ -72,7 +82,7 @@ export default function LoadingScreen({ next, title, subtitle }: Props) {
       <Animated.View 
         style={[
           StyleSheet.absoluteFillObject,
-          { transform: [{ translateY: bgTranslateY }, { scaleY: bgScaleY }] }
+          { transform: [{ translateY: bgTranslateY }] }
         ]}
       >
         <LinearGradient
@@ -84,20 +94,14 @@ export default function LoadingScreen({ next, title, subtitle }: Props) {
       </Animated.View>
 
       <View className="absolute inset-0 z-10 items-center justify-center">
-        
-        {/* <View 
-          className="mb-10 w-[45px] overflow-hidden rounded-[80px] border border-[#4c4354]/20 bg-[#110c16]"
-          style={{ height: TUBE_HEIGHT }}
+
+        {/* --- PORCENTAGEM ACIMA --- */}
+        <Text 
+          className="text-7xl font-bold mb-3 tracking-wider text-[#eed9ff]/90 text-center"
+          style={{ fontFamily: 'Manrope' }}
         >
-        
-          <Animated.View 
-            className="bg-[#e3b4ff]"
-            style={[
-              StyleSheet.absoluteFillObject,
-              { transform: [{ translateY: tubeTranslateY }, { scaleY: tubeScaleY }] }
-            ]} 
-          />
-        </View> */}
+          {percentage}
+        </Text>
         
         <Text 
           className="text-center text-[2.2rem] font-bold tracking-[-0.02em] text-[#eed9ff]"

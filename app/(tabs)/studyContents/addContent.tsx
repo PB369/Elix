@@ -169,8 +169,7 @@ export default function AddContent() {
       pathname: "/loadingScreen",
       params: {
         next: "/home",
-        title: "Processando materiais...",
-        subtitle: "Estamos elaborando sua poção de revisão e estudo!"
+        title: "Gerando revisão...",
       }
     })
   }
