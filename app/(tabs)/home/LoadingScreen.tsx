@@ -57,7 +57,7 @@ useEffect(() => {
 }, [fillAnimation]);
 
   // Animações de preenchimento
-  const bgScaleY = fillAnimation;
+
   const bgTranslateY = fillAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [height, 0],
@@ -67,20 +67,23 @@ useEffect(() => {
     <View className="flex-1 bg-[#16111b]">
       <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#16111b' }]} />
 
-      {/* Background animado */}
-      <Animated.View
-        style={[
-          StyleSheet.absoluteFillObject,
-          { transform: [{ translateY: bgTranslateY }, { scaleY: bgScaleY }] },
-        ]}
-      >
-        <LinearGradient
-          colors={['#8A2BE2', '#000000']}
-          style={StyleSheet.absoluteFillObject}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
-      </Animated.View>
+    {/* Background animado */}
+<Animated.View
+  style={[
+    StyleSheet.absoluteFillObject,
+    { 
+      // ALTERADO: Removeu-se o scaleY, deixando apenas o translateY
+      transform: [{ translateY: bgTranslateY }] 
+    },
+  ]}
+>
+  <LinearGradient
+    colors={['#8A2BE2', '#000000']}
+    style={StyleSheet.absoluteFillObject}
+    start={{ x: 0, y: 0 }}
+    end={{ x: 0, y: 1 }}
+  />
+</Animated.View>
 
       {/* Conteúdo Central */}
       <View className="absolute inset-0 z-10 items-center justify-center px-6">

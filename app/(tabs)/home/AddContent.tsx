@@ -160,7 +160,7 @@ const selecionarDocumento = async () => {
             </Text>
             {/* Subtítulo Maior (Aumentado para text-base) */}
             <Text className="text-[#a09ba8] text-base text-center mt-4 leading-6 px-2">
-              Descreva o que você estudou e adicione materiais para gerar sua
+              Reforce o que estudou e adicione materiais para gerar sua
               revisão.
             </Text>
           </View>

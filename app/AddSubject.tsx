@@ -70,11 +70,9 @@ export default function DisciplineSelectionScreen() {
             className="font-bold text-[#ffffff] text-4xl text-center"
             style={{ lineHeight: 34, letterSpacing: -0.3 }}
           >
-            Quais disciplinas você está estudando?
+            Quais disciplinas você está cursando?
           </Text>
-          <Text className="text-[#cfc2d7] text-[15px] text-center mt-3">
-            Isso ajuda a personalizar sua revisão.
-          </Text>
+       
         </View>
 
         {/* Glass card */}
@@ -165,7 +163,7 @@ export default function DisciplineSelectionScreen() {
         </TouchableOpacity>
       </View>
 
-      <Button onPress={()=> router.back()} title='Voltar'></Button>
+      {/* <Button onPress={()=> router.back()} title='Voltar'></Button> */}
     </SafeAreaView>
   );
 }

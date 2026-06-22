@@ -138,8 +138,7 @@ export default function ConnectNotionScreen() {
             className="text-[#cfc2d7] text-[14px] text-center"
             style={{ lineHeight: 21 }}
           >
-            Sincronize seus conteúdos do Notion com o Elix e gere revisões
-            personalizadas automaticamente.
+            Conecte seus materiais para o Elix transformar em revisões automaticamente.
           </Text>
         </View>
 
@@ -148,13 +147,13 @@ export default function ConnectNotionScreen() {
           <View className="rounded-2xl bg-[#1f1924] py-2">
             <FeatureItem
               icon={<FileText size={20} color="#dcb8ff" />}
-              title="Importação inteligente"
-              description="Buscamos suas páginas e identificamos os conteúdos mais relevantes."
+              title="Escolha o que acompanhar"
+              description="Selecione quais páginas ou bancos do Notion o Elix deve acompanhar."
             />
             <FeatureItem
               icon={<Columns2 size={20} color="#dcb8ff" />}
-              title="Revisões personalizadas"
-              description="Geramos perguntas e resumos sob medida com base no seu material."
+              title="Pronto para revisar"
+              description="Os novos tópicos entram na sua revisão diária ou ficam disponíveis na fila de revisão extra."
             />
             <FeatureItem
               icon={<RefreshCw size={20} color="#dcb8ff" />}
