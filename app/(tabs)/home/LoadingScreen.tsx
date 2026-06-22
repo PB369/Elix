@@ -2,48 +2,59 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions, Easing, TextInput } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { FlaskConical } from 'lucide-react-native';
+import { router } from 'expo-router';
 
 const { height } = Dimensions.get('window');
 const POTION_SIZE = 100; 
 
-// Criamos um componente de Input Animado para conseguir exibir o texto mudando via propriedade nativa
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+const waitChangeRoute = () =>{
+
+  setTimeout(() => {
+    router.push("/(tabs)/home");
+  }, 1500); // Altere este valor para o tempo que desejar em milissegundos
+}
 
 export default function LoadingScreen() {
   const fillAnimation = useRef(new Animated.Value(0)).current;
   const [percentage, setPercentage] = useState('0%');
 
-  useEffect(() => {
-    // Ouvinte para atualizar o estado da porcentagem textual de forma limpa
-    const listenerId = fillAnimation.addListener(({ value }) => {
-      setPercentage(`${Math.round(value * 100)}%`);
-    });
+useEffect(() => {
+  // Ouvinte para atualizar o estado da porcentagem textual de forma limpa
+  const listenerId = fillAnimation.addListener(({ value }) => {
+    setPercentage(`${Math.round(value * 100)}%`);
+  });
 
-    // Animação inicial (até 90%)
-    Animated.timing(fillAnimation, {
-      toValue: 0.9,
-      duration: 10000,
-      easing: Easing.out(Easing.cubic),
-      useNativeDriver: true, // Mantém a performance fluida
-    }).start();
+  // Animação inicial (até 90%)
+  Animated.timing(fillAnimation, {
+    toValue: 0.9,
+    duration: 10000,
+    easing: Easing.out(Easing.cubic),
+    useNativeDriver: true, // Mantém a performance fluida
+  }).start();
 
-    // Simulação do término da carga (100%)
-    const fakeApiCall = setTimeout(() => {
-      fillAnimation.stopAnimation(() => {
-        Animated.timing(fillAnimation, {
-          toValue: 1,
-          duration: 2000,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }).start();
+  // Simulação do término da carga (100%)
+  const fakeApiCall = setTimeout(() => {
+    fillAnimation.stopAnimation(() => {
+      Animated.timing(fillAnimation, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: true,
+      }).start(({ finished }) => {
+        // --- ADICIONADO AQUI ---
+        // Quando os 100% terminarem de encher, chama a função da rota
+        if (finished) {
+          waitChangeRoute();
+        }
       });
-    }, 3500);
+    });
+  }, 3500);
 
-    return () => {
-      clearTimeout(fakeApiCall);
-      fillAnimation.removeListener(listenerId);
-    };
-  }, [fillAnimation]);
+  return () => {
+    clearTimeout(fakeApiCall);
+    fillAnimation.removeListener(listenerId);
+  };
+}, [fillAnimation]);
 
   // Animações de preenchimento
   const bgScaleY = fillAnimation;
@@ -92,12 +103,6 @@ export default function LoadingScreen() {
           Preparando a revisão...
         </Text>
 
-        <Text
-          className="mt-4 text-base text-[#cfc2d7] text-center"
-          style={{ fontFamily: 'Manrope' }}
-        >
-          Ajustando a combinação...
-        </Text>
       </View>
     </View>
   );
