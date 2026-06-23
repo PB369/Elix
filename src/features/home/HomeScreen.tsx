@@ -18,6 +18,7 @@ import { useUserDataStore } from "@/src/store/userDataStore";
 import { UserService } from "@/src/services/user/user.service";
 import { useAppInit } from "@/src/hooks/useAppInit";
 import LoadingScreen from "../loadingScreen/LoadingScreen";
+import { BlurView } from "expo-blur";
 
 export default function HomeScreen() {
   // Animação de fade-in e slide-up para os conteúdos da tela
@@ -45,6 +46,19 @@ export default function HomeScreen() {
     ),
     [],
   );
+
+    const renderBackground = useCallback(
+  (props: any) => (
+    <BlurView
+      // O props.style é injetado pela biblioteca para posicionar o fundo
+      style={[props.style, { borderRadius: 24, overflow: 'hidden' }]}
+      tint="default"
+      intensity={50} // Ajuste a força do vidro
+    />
+  ),
+  []
+);
+
   
   // Inicia as animações de fade-in e slide-up quando a tela é montada
   useEffect(() => {
@@ -144,37 +158,38 @@ export default function HomeScreen() {
       </Animated.View>
       <UploadButton onPress={handlePresentModalPress} />
       {/* O BOTTOM SHEET EM SI */}
-      <BottomSheetModal
+<BottomSheetModal
         ref={bottomSheetModalRef}
         index={0} // abre no primeiro ponto
         snapPoints={snapPoints}
+         backgroundComponent={renderBackground}
         backdropComponent={renderBackdrop}
-        backgroundStyle={{ backgroundColor: "black" }}
+        
       >
-        <BottomSheetView style={{ flex: 1, alignItems: "center", padding: 24 }}>
-          <TouchableOpacity
-            onPress={() => {
-              bottomSheetModalRef.current?.dismiss();
-              router.push("/(tabs)/studyContents/addContent");
-            }}
-            className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1"
-          >
-            {/* Ícone posicionado à esquerda com fundo leve */}
-            <View className="mr-4 p-2.5 rounded-full">
-              <AntDesign name="plus" size={24} color="#d3a0fc" />
-            </View>
-            {/* Bloco de texto empilhado (Título em cima, Subtítulo em baixo) */}
-            <View className="flex-1">
-              <Text className="text-lg font-semibold text-white mb-1">
-                Adicionar Conteúdo
-              </Text>
-              <Text className="text-sm text-gray-500">
-                Inclua Documentos, anotações de aula, o que estudou
-              </Text>
-            </View>
-          </TouchableOpacity>
+        <BottomSheetView style={{flex:1,alignItems:'center',padding:24}}>
+            
+              <TouchableOpacity onPress={()=>{ bottomSheetModalRef.current?.dismiss();router.push("/studyContents/addContent")}} className="flex-row items-center p-4 my-2 mx-4 rounded-xl shadow-sm elevation-1">
+                
+                {/* Ícone posicionado à esquerda com fundo leve */}
+                <View className="mr-4 p-2.5 rounded-full">
+                  <AntDesign name="plus" size={24} color="#d3a0fc" />
+                </View>
+
+                {/* Bloco de texto empilhado (Título em cima, Subtítulo em baixo) */}
+                <View className="flex-1">
+                  <Text className="text-lg font-semibold text-white mb-1">
+                    Adicionar Conteúdo
+                  </Text>
+                  <Text className="text-sm text-gray-500">
+                    Inclua Documentos, anotações de aula, o que estudou
+                  </Text>
+                </View>
+
+              </TouchableOpacity>
+      
         </BottomSheetView>
       </BottomSheetModal>
+
     </View>
   )
 }
