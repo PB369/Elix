@@ -57,7 +57,7 @@ const UploadButton = ({ onPress }: UploadButtonProps) => {
             position: "absolute",
             width: "100%",
             height: "100%",
-            borderRadius: 12,
+            borderRadius: '30%',
             backgroundColor: "#8749f1", // Cor do brilho
           },
           glowStyle,
@@ -71,7 +71,7 @@ const UploadButton = ({ onPress }: UploadButtonProps) => {
         style={{
           width: "100%",
           height: "100%",
-          borderRadius: 12,
+          borderRadius: '30%',
           borderWidth: 2,
           borderColor: "#8749f1",
           backgroundColor: "#5b21b6",

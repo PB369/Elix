@@ -12,8 +12,9 @@ import {
 } from 'react-native'
 import MaterialIcons from '@expo/vector-icons/MaterialIcons'
 import { useRouter } from 'expo-router'
+import { UserService } from "@/src/services/user/user.service";
 
-// ── Types ──────────────────────────────────────────────────────────────────
+// ── Types
 type Option = { label: string; value: string }
 
 interface SelectPickerProps {
@@ -24,7 +25,7 @@ interface SelectPickerProps {
   icon: string
 }
 
-// ── Data ───────────────────────────────────────────────────────────────────
+// ── Data
 const COURSES: Option[] = [
   { label: 'Medicina', value: 'medicina' },
   { label: 'Direito', value: 'direito' },
@@ -39,7 +40,7 @@ const SEMESTERS: Option[] = Array.from({ length: 12 }, (_, i) => ({
 }))
 
 
-// ── SelectPicker ───────────────────────────────────────────────────────────
+// ── SelectPicker
 function SelectPicker({ placeholder, options, value, onChange, icon }: SelectPickerProps) {
   const [open, setOpen] = useState(false)
   const selected = options.find(o => o.value === value)
@@ -96,11 +97,20 @@ function SelectPicker({ placeholder, options, value, onChange, icon }: SelectPic
   )
 }
 
-// ── Screen ─────────────────────────────────────────────────────────────────
+// ── Screen 
 export default function OnboardingScreen() {
     const [course, setCourse] = useState('')
     const [semester, setSemester] = useState('')
-    const router = useRouter()
+    const router = useRouter();
+
+    function handleNext() {
+      UserService.updateUser({
+        curso: course,
+        semestre: Number(semester)
+      });
+      router.replace("/addSubjects")
+    }
+
     return (
         <View className="flex-1 bg-[#16111b]">
         <StatusBar barStyle="light-content" />
@@ -201,7 +211,7 @@ export default function OnboardingScreen() {
                 <TouchableOpacity
                 activeOpacity={0.85}
                 disabled={!course || !semester}
-                onPress={()=>router.replace('/(tabs)/home')}
+                onPress={handleNext}
                 className="w-full flex-row items-center justify-center gap-x-3 py-5 rounded-lg"
                 style={{
                     backgroundColor: course && semester ? '#8a2be2' : '#39323d',
@@ -216,7 +226,7 @@ export default function OnboardingScreen() {
                     className="font-bold text-lg"
                     style={{ color: course && semester ? '#eed9ff' : '#988ca0' }}
                 >
-                    Finalizar Setup
+                    Próximo
                 </Text>
                 <MaterialIcons
                     name="arrow-forward"

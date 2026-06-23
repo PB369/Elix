@@ -1,38 +1,27 @@
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { Stack } from 'expo-router';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import "@/global.css";
+import { QuizQuestionsService } from "@/src/services/quiz/quiz.service";
+import { StudyContentService } from "@/src/services/studyContent/studyContent.service";
+import { UserService } from "@/src/services/user/user.service";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { Stack } from "expo-router";
+import { useEffect } from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function RootLayout() {
-
-
-
-
+  useEffect(() => {
+    UserService.initialize();
+    StudyContentService.initialize();
+    QuizQuestionsService.initialize();
+  }, []);
 
   return (
-    // 1. O GestureHandlerRootView DEVE ter flex: 1
     <GestureHandlerRootView style={{ flex: 1 }}>
-      {/* 2. O BottomSheetModalProvider engloba o Stack */}
       <BottomSheetModalProvider>
-        
         <Stack screenOptions={{ headerShown: false }}>
           <Stack.Screen name="index" />
-          <Stack.Screen name="welcome" />
-          <Stack.Screen name="signUp" />
           <Stack.Screen name="(tabs)" />
         </Stack>
-        
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
-  
-  // return (
-
-    
-  //   <Stack screenOptions={{ headerShown: false }}>
-  //     <Stack.Screen name="index" />
-  //     <Stack.Screen name="welcome" />
-  //     <Stack.Screen name="signUp" />
-  //     <Stack.Screen name="(tabs)" />
-  //   </Stack>
-  // );
 }

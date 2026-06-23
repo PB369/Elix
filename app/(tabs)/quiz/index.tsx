@@ -1,6 +1,6 @@
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '@/global.css'
 import {
     ScrollView,
@@ -11,8 +11,10 @@ import {
     useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { QuizQuestionsService } from '@/src/services/quiz/quiz.service';
+import { useQuizQuestionsStore } from '@/src/store/quizQuestionsStore';
 
-// ─── Design Tokens ────────────────────────────────────────────────────────────
+// ─── Design Tokens 
 const C = {
   surface:                '#16111b',
   surfaceContainerLow:    '#1f1924',
@@ -29,49 +31,24 @@ const C = {
   correct:                '#00c896',
 };
 
-// ─── Mock data ────────────────────────────────────────────────────────────────
-const QUESTIONS = [
-  {
-    category: 'Neurociência Aplicada',
-    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
-    options: [
-      { id: 'a', label: 'Córtex Pré-frontal' },
-      { id: 'b', label: 'Hipocampo' },
-      { id: 'c', label: 'Cerebelo' },
-      { id: 'd', label: 'Amígdala' },
-    ],
-    correctId: 'b',
-  },
-  {
-    category: 'Neurociência Aplicada',
-    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
-    options: [
-      { id: 'a', label: 'Hipocampo' },
-      { id: 'b', label: 'Córtex Pré-frontal' },
-      { id: 'c', label: 'Amígdala' },
-      { id: 'd', label: 'Cerebelo' },
-    ],
-    correctId: 'b',
-  },
-  {
-    category: 'Neurociência Aplicada',
-    title: 'Qual região do cérebro é a principal responsável pela consolidação da memória?',
-    hint: 'Considere o processo de transferência da memória de curto prazo para os sistemas de armazenamento de longo prazo.',
-    options: [
-      { id: 'a', label: 'Amígdala' },
-      { id: 'b', label: 'Córtex Pré-frontal' },
-      { id: 'c', label: 'Cerebelo' },
-      { id: 'd', label: 'Hipocampo' },
-    ],
-    correctId: 'b',
-  }
-];
-
-const amountOfQuestions = QUESTIONS.length;
 
 export default function QuizScreen() {
+  // ─── Mock data (este código está comentado porque agora os dados vêm do store e ele causa loop infinito de renderização)
+  useEffect(() => {
+    console.log("INITIALIZE");
+    QuizQuestionsService.initialize();
+  }, []);
+  
+  const quizData =
+  useQuizQuestionsStore(
+    (state) => state.data
+  );
+
+  const quizQuestions =
+    quizData?.questoes ?? [];
+  
+  const amountOfQuestions = quizQuestions.length;
+
   const { width } = useWindowDimensions();
   const router = useRouter()
 
@@ -79,11 +56,14 @@ export default function QuizScreen() {
   const [confirmed, setConfirmed] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  // const currentQuestion = QUESTIONS[currentQuestionIndex];
-  const isLastQuestion = currentQuestionIndex === QUESTIONS.length - 1;
+  const currentQuestion = quizQuestions[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex === quizQuestions.length - 1;
   const isFirstQuestion = currentQuestionIndex === 0;
 
-  const progress = (currentQuestionIndex + 1) / amountOfQuestions;
+  const progress = amountOfQuestions > 0
+    ? currentQuestionIndex / amountOfQuestions
+    : 0;
+  const progressWidth = (width + 40 + 48 + 12) * progress;
 
   function handleSelect(id: string) {
     if (confirmed) return;
@@ -115,32 +95,76 @@ export default function QuizScreen() {
       goToQuestion(currentQuestionIndex - 1);
       return;
     }
-
     router.back();
   }
 
   function getOptionStyle(id: string) {
     if (!confirmed) return styles.optionDefault; // ← era !selected
-    if (id === QUESTIONS[currentQuestionIndex].correctId) return styles.optionCorrect;
-    if (id === selected && selected !== QUESTIONS[currentQuestionIndex].correctId) return styles.optionWrong;
+    if (id === currentQuestion.id_gabarito) return styles.optionCorrect;
+    if (id === selected && selected !== currentQuestion.id_gabarito) return styles.optionWrong;
     return styles.optionDefault;
   }
 
   function getOptionTextStyle(id: string) {
     if (!confirmed) return styles.optionText; // ← era !selected
-    if (id === QUESTIONS[currentQuestionIndex].correctId) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
-    if (id === selected && selected !== QUESTIONS[currentQuestionIndex].correctId) return [styles.optionText, { color: '#ff6b6b' }];
+    if (id === currentQuestion.id_gabarito) return [styles.optionText, { color: C.correct, fontFamily: 'Manrope_700Bold' }];
+    if (id === selected && selected !== currentQuestion.id_gabarito) return [styles.optionText, { color: '#ff6b6b' }];
     return styles.optionText;
+  }
+
+  if(!currentQuestion) {
+    return (
+      <SafeAreaView style={styles.safe} edges={['top', 'bottom']} className='justify-center items-center'>
+        <Text style={{ color: C.onSurfaceVariant, fontFamily: 'Manrope_500Medium' }}>
+          Carregando perguntas...
+        </Text>
+      </SafeAreaView>
+    );
   }
 
   return (
     <SafeAreaView style={styles.safe} edges={['top', 'bottom']}>
 
-      {/* ── Progress Bar ── */}
-      <View style={styles.progressBarWrapper}>
-        <View style={[styles.progressTrack, { width: width - 48 }]}>
-          <View style={[styles.progressFill, { width: (width - 48) * progress }]} />
+      <View className="flex-row items-center px-6 pt-4 pb-3 gap-3">
+        {/* ── Progress Bar ── */}
+        <View
+          className="flex-1 rounded-full overflow-hidden"
+          style={{ height: 10, backgroundColor: C.surfaceContainerHigh }}
+        >
+          <View
+            className="h-full rounded-full"
+            style={{
+              width: progressWidth,
+              backgroundColor: C.primaryContainer,
+            }}
+          />
         </View>
+        {/* Contador */}
+        <Text
+          style={{
+            fontFamily: 'Manrope_600SemiBold',
+            fontSize: 12,
+            color: C.onSurfaceVariant,
+            flexShrink: 0,
+          }}
+        >
+          {currentQuestionIndex + 1}/{quizQuestions.length}
+        </Text>
+        {/* ── Exit Button ── */}
+        <TouchableOpacity
+            onPress={() => router.replace('/(tabs)/home')}
+            activeOpacity={0.7}
+            className="items-center justify-center"
+            style={{
+              width: 36,
+              height: 36,
+              borderRadius: 18,
+              backgroundColor: C.surfaceContainerHigh,
+              flexShrink: 0,
+            }}
+          >
+            <Feather name="x" size={16} color={C.onSurfaceVariant} />
+        </TouchableOpacity>
       </View>
 
       {/* O segredo está aqui: o ScrollView ganha uma View servindo de container ao redor */}
@@ -151,25 +175,25 @@ export default function QuizScreen() {
         >
           {/* ── Category chip ── */}
           <View style={styles.chip}>
-            <Text style={styles.chipText}>{QUESTIONS[currentQuestionIndex].category.toUpperCase()}</Text>
+            <Text style={styles.chipText}>{currentQuestion.categoria.toUpperCase()}</Text>
           </View>
 
           {/* ── Question ── */}
-          <Text style={styles.question}>{QUESTIONS[currentQuestionIndex].title}</Text>
+          <Text style={styles.question}>{currentQuestion.titulo}</Text>
 
           {/* ── Hint ── */}
-          <Text style={styles.hint}>{QUESTIONS[currentQuestionIndex].hint}</Text>
+          <Text style={styles.hint}>{currentQuestion.dica}</Text>
 
           {/* ── Options ── */}
           <View style={styles.optionsList}>
-            {QUESTIONS[currentQuestionIndex].options.map((opt) => (
+            {currentQuestion.opcoes.map((opt) => (
               <TouchableOpacity
                 key={opt.id}
                 onPress={() => handleSelect(opt.id)}
                 activeOpacity={0.75}
                 style={[styles.option, getOptionStyle(opt.id)]}
               >
-                <Text style={getOptionTextStyle(opt.id)}>{opt.label}</Text>
+                <Text style={getOptionTextStyle(opt.id)}>{opt.rotulo}</Text>
 
                 {/* Ícone de estado */}
             {!confirmed && (
@@ -179,17 +203,17 @@ export default function QuizScreen() {
       )}
     </View>
   )}
-  {confirmed && opt.id === QUESTIONS[currentQuestionIndex].correctId && (
+  {confirmed && opt.id === currentQuestion.id_gabarito && (
     <View style={[styles.radioOuter, { borderColor: C.correct, backgroundColor: C.correct }]}>
       <Feather name="check" size={12} color="#fff" />
     </View>
   )}
-  {confirmed && opt.id === selected && selected !== QUESTIONS[currentQuestionIndex].correctId && (
+  {confirmed && opt.id === selected && selected !== currentQuestion.id_gabarito && (
     <View style={[styles.radioOuter, { borderColor: '#ff6b6b', backgroundColor: '#ff6b6b' }]}>
       <Feather name="x" size={12} color="#fff" />
     </View>
   )}
-  {confirmed && opt.id !== QUESTIONS[currentQuestionIndex].correctId && opt.id !== selected && (
+  {confirmed && opt.id !== currentQuestion.id_gabarito && opt.id !== selected && (
     <View style={styles.radioOuter} />
   )}
           </TouchableOpacity>

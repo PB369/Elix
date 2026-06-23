@@ -1,32 +1,13 @@
 import { BlurView } from "expo-blur";
 import React, { FC, ReactNode, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  AppState,
-  AppStateStatus,
-  Easing,
-  StyleSheet,
-  Text,
-  View,
-  ViewStyle,
-} from "react-native";
+import { Animated, AppState, AppStateStatus, Easing, StyleSheet, Text, View, ViewStyle } from "react-native";
 import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
 /**
- * LiquidFillCard — React Native
- *
  * Dependências:
  *   npx expo install react-native-svg
  *   npx expo install expo-blur
- *
- * Props:
- *  - title     {string}    — nome do curso
- *  - icon      {ReactNode} — ícone da matéria
- *  - status    {string}    — texto da tag
- *  - progress  {number}    — nível 0–100
- *  - height    {number}    — altura em dp (default 220)
- *  - style     {ViewStyle} — estilo externo
- */
+ **/
 
 interface LiquidFillCardProps {
   title?:    string;
@@ -131,7 +112,7 @@ const WaveSvg: FC<{
 
 // ── componente principal ──
 const LiquidFillCard: FC<LiquidFillCardProps> = ({
-  title    = "Neurologia",
+  title = "Neurologia",
   icon,
   progress = 0,
   status   = progress > 55 ? "Consolidado" : "Em reforço",
@@ -257,9 +238,9 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   iconBox: {
-    width: 64,
-    height: 64,
-    borderRadius: 20,
+    width: 54,
+    height: 54,
+    borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.08)",
@@ -272,12 +253,13 @@ const styles = StyleSheet.create({
     shadowRadius: 15,
   },
   iconEmoji: {
-    fontSize: 30,
+    fontSize: 25,
   },
   title: {
     fontSize: 16,
     fontWeight: "700",
     color: "#fff",
+    textAlign: "center",
     letterSpacing: -0.3,
     textShadowColor: "rgba(0,0,0,0.6)",
     textShadowOffset: { width: 0, height: 1 },
