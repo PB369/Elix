@@ -91,13 +91,7 @@ export default function HomeScreen() {
         <Header />
         <DoseCard
           onPress={() => {
-            router.replace({
-              pathname: '/loadingScreen',
-              params: {
-                next: '/quiz',
-                title: 'Preparando sua revisão...',
-              }
-            })
+            router.push("/(tabs)/quiz")
           }}
         />
         <YourContents />
